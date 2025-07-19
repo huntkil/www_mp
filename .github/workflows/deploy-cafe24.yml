@@ -217,30 +217,54 @@ jobs:
           rm -rf .cursor/
 
       - name: Deploy to Cafe24 via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          server: ${{ secrets.CAFE24_FTP_SERVER }}
-          username: ${{ secrets.CAFE24_FTP_USERNAME }}
-          password: ${{ secrets.CAFE24_FTP_PASSWORD }}
-          local-dir: ./
-          server-dir: /www/mp/
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
-            **/.env
-            **/README.md
-            **/composer.*
-            **/*.tar.gz
-            **/temp-deploy/**
-            **/.github/**
-            **/tests/**
-            **/db_check.php
-            **/db_setup.php
-            **/debug.php
-            **/test.php
-            **/*.md
-            **/.cursor/**
+        run: |
+          echo "🚀 Cafe24 FTP 배포 시작..."
+          
+          # FTP 연결 정보
+          FTP_SERVER="${{ secrets.CAFE24_FTP_SERVER }}"
+          FTP_USERNAME="${{ secrets.CAFE24_FTP_USERNAME }}"
+          FTP_PASSWORD="${{ secrets.CAFE24_FTP_PASSWORD }}"
+          REMOTE_DIR="/www/mp/"
+          
+          # lftp를 사용한 배포 (더 안정적)
+          if command -v lftp &> /dev/null; then
+            echo "📡 lftp를 사용하여 배포 중..."
+            
+            # 배포 스크립트 생성
+            cat > deploy_script.lftp << EOF
+            open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_SERVER
+            cd $REMOTE_DIR
+            mirror --reverse --delete --verbose --exclude .git/ --exclude .github/ --exclude tests/ --exclude *.md --exclude composer.* --exclude *.tar.gz --exclude temp-deploy/ --exclude .cursor/ --exclude db_check.php --exclude db_setup.php --exclude debug.php --exclude test.php . .
+            bye
+            EOF
+            
+            lftp -f deploy_script.lftp
+            
+          else
+            echo "📡 curl을 사용하여 배포 중..."
+            
+            # 주요 파일들만 업로드
+            for file in index.php health.php favicon.ico LICENSE; do
+              if [ -f "$file" ]; then
+                echo "업로드 중: $file"
+                curl -T "$file" "ftp://$FTP_SERVER$REMOTE_DIR$file" --user "$FTP_USERNAME:$FTP_PASSWORD"
+              fi
+            done
+            
+            # system 디렉토리 업로드
+            if [ -d "system" ]; then
+              echo "system 디렉토리 업로드 중..."
+              find system -type f -exec curl -T {} "ftp://$FTP_SERVER$REMOTE_DIR{}" --user "$FTP_USERNAME:$FTP_PASSWORD" \;
+            fi
+            
+            # modules 디렉토리 업로드
+            if [ -d "modules" ]; then
+              echo "modules 디렉토리 업로드 중..."
+              find modules -type f -exec curl -T {} "ftp://$FTP_SERVER$REMOTE_DIR{}" --user "$FTP_USERNAME:$FTP_PASSWORD" \;
+            fi
+          fi
+          
+          echo "✅ 배포 완료!"
 
       - name: Post-deployment health check
         run: |
