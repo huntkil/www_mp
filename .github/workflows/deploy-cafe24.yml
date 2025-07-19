@@ -223,7 +223,7 @@ jobs:
           username: ${{ secrets.CAFE24_FTP_USERNAME }}
           password: ${{ secrets.CAFE24_FTP_PASSWORD }}
           local-dir: ./
-          server-dir: /public_html/mp/
+          server-dir: /public_html/
           exclude: |
             **/.git*
             **/.git*/**
@@ -233,6 +233,14 @@ jobs:
             **/composer.*
             **/*.tar.gz
             **/temp-deploy/**
+            **/.github/**
+            **/tests/**
+            **/db_check.php
+            **/db_setup.php
+            **/debug.php
+            **/test.php
+            **/*.md
+            **/.cursor/**
 
       - name: Post-deployment health check
         run: |
@@ -240,10 +248,10 @@ jobs:
           sleep 30
           
           # 헬스 체크 (선택사항)
-          curl -f http://gukho.net/mp/health.php || echo "Health check failed, but deployment may still be successful"
+          curl -f http://gukho.net/health.php || echo "Health check failed, but deployment may still be successful"
 
       - name: Send deployment notification
         run: |
           echo "🚀 Deployment completed successfully!"
-          echo "🌐 Site URL: http://gukho.net/mp/"
-          echo "📊 Health Check: http://gukho.net/mp/health.php" 
+          echo "🌐 Site URL: http://gukho.net/"
+          echo "📊 Health Check: http://gukho.net/health.php" 
