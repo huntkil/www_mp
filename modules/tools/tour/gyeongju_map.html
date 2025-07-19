@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gyeongju Tour Map - gukho.net</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            z-index: 1;
+        }
+        
+        .map-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+        }
+        
+        .map-overlay {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 2;
+            background: white;
+            padding: 10px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .map-title {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 2;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .map-title h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .map-title p {
+            margin: 5px 0 0;
+            font-size: 0.875rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="map-container">
+        <div class="map-title">
+            <h1>Gyeongju Tour Map</h1>
+            <p>Interactive map of tour locations</p>
+        </div>
+        <div id="map"></div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    
+    <script>
+        // ... existing map initialization code ...
+        var map = L.map('map', {
+            center: [35.856171, 129.224748],
+            zoom: 12,
+            zoomControl: true,
+            preferCanvas: false
+        });
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: 'Data by &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
+            maxZoom: 18
+        }).addTo(map);
+
+        // Add markers for each location
+        var locations = [
+            {
+                name: "Hanwha Resort",
+                lat: 35.856171,
+                lng: 129.224748
+            },
+            {
+                name: "Gyeongju National Museum",
+                lat: 35.835155,
+                lng: 129.218813
+            },
+            {
+                name: "Anapji (Donggung Palace and Wolji Pond)",
+                lat: 35.835389,
+                lng: 129.226611
+            },
+            {
+                name: "Bulguksa Temple",
+                lat: 35.789314,
+                lng: 129.331022
+            },
+            {
+                name: "Seokguram Grotto",
+                lat: 35.790278,
+                lng: 129.360833
+            },
+            {
+                name: "Gyeongju Folk Craft Village",
+                lat: 35.786944,
+                lng: 129.331389
+            },
+            {
+                name: "Cheomseongdae",
+                lat: 35.836667,
+                lng: 129.218889
+            },
+            {
+                name: "Daereungwon Tomb Complex",
+                lat: 35.832222,
+                lng: 129.218611
+            },
+            {
+                name: "Hwangnidan-gil",
+                lat: 35.839722,
+                lng: 129.209167
+            },
+            {
+                name: "Gyeongju World California Beach",
+                lat: 35.842778,
+                lng: 129.2825
+            }
+        ];
+
+        locations.forEach(function(location) {
+            L.marker([location.lat, location.lng])
+                .bindPopup(location.name)
+                .addTo(map);
+        });
+</script>
+</body>
+</html>

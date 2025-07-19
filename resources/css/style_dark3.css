@@ -1,0 +1,156 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #181a1b; /* 더 진한 다크 배경 */
+    color: #f1f1f1; /* 더 밝은 텍스트 */
+    line-height: 1.4;
+}
+
+header, nav, main, footer {
+    padding: 16px 8px;
+    background-color: #23272e;
+}
+
+nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+}
+
+nav a, button {
+    color: #4fd1ff;
+    text-decoration: none;
+    padding: 8px 14px;
+    border-radius: 4px;
+    font-size: 17px;
+    transition: background 0.2s, color 0.2s;
+}
+nav a:hover, button:hover {
+    background: #313a46;
+    color: #90eaff;
+}
+
+h2 {
+    margin: 16px 0 8px 12px;
+    border-bottom: 2px solid #ffd600;
+    padding-bottom: 5px;
+    font-size: 20px;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0 8px;
+    margin: 12px 0;
+}
+ul li {
+    margin: 10px 0;
+    padding: 12px;
+    background-color: #23272e;
+    border-radius: 6px;
+    transition: background-color 0.3s;
+}
+ul li a {
+    color: #ffd600;
+    text-decoration: none;
+    font-size: 17px;
+}
+ul li:hover {
+    background-color: #31343a;
+}
+
+.login-form {
+    width: 100%;
+    max-width: 340px;
+    padding: 20px;
+    background-color: #23272e;
+    border-radius: 10px;
+    margin: 0 auto;
+}
+
+.form-control label {
+    color: #ccc;
+}
+.form-control input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #444;
+    background-color: #222;
+    color: #fff;
+    border-radius: 4px;
+}
+.form-control input[type="submit"] {
+    background-color: #ffd600;
+    color: #181a1b;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.form-control input[type="submit"]:hover {
+    background-color: #ffe066;
+}
+
+.responsive-iframe-container {
+    position: relative;
+    width: 100%;
+    height: 60vw;
+    max-height: 80vh;
+}
+.responsive-iframe-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #23272e; /* 다크모드 배경으로 변경 */
+    color: #f1f1f1;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.3);
+}
+
+.container {
+    padding: 2px 16px;
+}
+
+/* 모바일 최적화 */
+@media (max-width: 600px) {
+    body {
+        font-size: 16px;
+    }
+    header, nav, main, footer {
+        padding: 10px 4px;
+    }
+    nav a, button {
+        font-size: 16px;
+        padding: 10px 8px;
+    }
+    h2 {
+        font-size: 18px;
+        margin-left: 6px;
+    }
+    .login-form {
+        padding: 12px;
+        max-width: 98vw;
+    }
+    .card {
+        width: 98%;
+        padding: 10px;
+    }
+}

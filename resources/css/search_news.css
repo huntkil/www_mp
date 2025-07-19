@@ -1,0 +1,115 @@
+body {
+    background-color: #333;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+}
+
+header, footer {
+    background-color: #111;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+}
+
+/* nav a {
+    color: #ccc;
+    text-decoration: none;
+    margin-right: 10px;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: #60f642;
+} */
+
+nav a {
+    color: #eef073; /* 링크 색상을 흰색으로 변경 */
+    text-decoration: underline;
+    margin-right: 10px;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: #60f642; /* 호버 시 색상은 그대로 유지 */
+}
+
+a {
+    color: #eef073; /* 링크 색상을 흰색으로 변경 */
+    text-decoration: underline;
+    margin-right: 10px;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #60f642; /* 호버 시 색상은 그대로 유지 */
+}
+
+.search-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+}
+
+.form-group {
+    width: 100%;
+}
+
+@media screen and (min-width: 600px) {
+    .search-form {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .form-group {
+        flex: 1;
+    }
+}
+
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #484848;
+    color: #fff;
+    width: 100%;
+    /* overflow: hidden; 이미지가 카드를 벗어나지 않도록 설정 */
+}
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.card img {
+    width: 100%; /* 이미지 너비를 카드 너비에 맞춤 */
+    height: auto; /* 이미지 높이를 자동으로 조절하여 비율 유지 */
+    border-radius: 5px; /* 이미지의 모서리를 카드와 같게 둥글게 처리 */
+    object-fit: contain; /* 이미지가 카드의 너비와 높이에 맞게 조절되도록 설정 */
+}
+
+
+@media screen and (min-width: 600px) {
+    .card {
+        width: calc(50% - 20px); /* 데스크톱에서 2열로 표시 */
+        overflow: hidden;
+    }
+    .card img {
+        max-width: 100%;  /* 이미지의 최대 너비를 카드 너비에 맞춤 */
+        height: auto;     /* 이미지 높이를 자동으로 조절하여 비율 유지 */
+        object-fit: cover;
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    .card {
+        width: calc(30% - 20px); /* 데스크톱에서 더 넓은 화면에서 3열로 표시 */
+    }
+}
+
+/* 기타 스타일링... */

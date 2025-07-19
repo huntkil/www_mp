@@ -1,0 +1,87 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #333;  /* Dark background color */
+    color: #fff;  /* Light text color */
+}
+
+header {
+    background-color: #222;  /* Slightly darker header background */
+    box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);  /* Lighter box shadow */
+}
+
+nav {
+    background-color: #444;  /* Darker navigation background */
+    box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);  /* Lighter box shadow */
+}
+
+a {
+    color: #abc46b;
+}
+
+a:hover {
+	color: #6ad04e;  /* 수정된 hover 시 링크 색상 */
+}
+
+nav a {
+    color: #fff;  /* Light navigation link color */
+    margin-right: 10px;
+}
+
+main {
+    background-color: #222;  /* Dark main content background */
+    box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);  /* Lighter box shadow */
+}
+
+th, td {
+    border: 1px solid #555;  /* Darker border color for table cells */
+    color: #fff;  /* Light text color for table cells */
+}
+
+th {
+    background-color: #444;  /* Darker header background for tables */
+}
+
+tr:nth-child(even) {
+    background-color: #333;  /* Darker background for even rows */
+}
+
+tr:hover {
+    background-color: #444;  /* Darker background on hover */
+}
+
+footer {
+    background-color: #222;  /* Darker footer background */
+    box-shadow: 0 -2px 5px rgba(255, 255, 255, 0.1);  /* Lighter box shadow */
+    border-top: 2px solid #fff;  /* Lighter top border */
+}
+
+/* Media Query for Mobile Devices */
+@media (max-width: 600px) {
+    header, nav, main, footer {
+        margin: 10px;
+    }
+
+    th, td {
+        padding: 8px;
+    }
+}
+/* 추가된 미디어 쿼리 예시 (태블릿 및 더 큰 스크린을 위한 설정) */
+@media (min-width: 601px) and (max-width: 1024px) {
+    body {
+        font-size: 18px; /* 글꼴 크기 증가 */
+    }
+
+    nav, footer {
+        padding: 15px; /* 패딩 증가 */
+    }
+
+    /* ... 기타 요소 스타일 조정 */
+}
+
+/* 모든 이미지가 화면 너비에 맞게 조정되도록 하는 설정 */
+img {
+    max-width: 100%;
+    height: auto;
+}

@@ -1,0 +1,76 @@
+# PHP 프로젝트 .gitignore
+
+# 환경 설정 파일
+.env
+.env.local
+.env.production
+config/credentials/production.php
+config/credentials/development.php
+
+# 데이터베이스 파일
+*.sqlite
+*.sqlite3
+*.db
+config/database.sqlite
+
+# 로그 파일
+*.log
+system/logs/*
+!system/logs/.gitkeep
+
+# 캐시 파일
+system/cache/*
+!system/cache/.gitkeep
+
+# 업로드 파일
+system/uploads/*
+!system/uploads/.gitkeep
+
+# 세션 파일
+system/sessions/*
+!system/sessions/.gitkeep
+
+# 임시 파일
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# IDE 파일
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS 파일
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Composer
+vendor/
+composer.lock
+
+# Node.js (만약 사용한다면)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 테스트 파일
+tests/database/test.sqlite
+tests/database/*.sqlite
+
+# 백업 파일
+*.bak
+*.backup
+backup/
+
+# 배포 파일
+deploy/
+*.zip
+*.tar.gz
+
+# 기타
+cookies.txt 

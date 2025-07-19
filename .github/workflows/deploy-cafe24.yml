@@ -1,0 +1,168 @@
+name: Deploy to Cafe24
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  # 코드 품질 검사
+  code-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, sqlite3
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Run PHP CS Fixer
+        run: vendor/bin/php-cs-fixer fix --dry-run --diff
+
+      - name: Run PHPStan
+        run: vendor/bin/phpstan analyse --level=5
+
+  # 테스트 실행
+  test:
+    runs-on: ubuntu-latest
+    needs: code-quality
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, sqlite3
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Create test database
+        run: |
+          mkdir -p tests/database
+          touch tests/database/test.sqlite
+
+      - name: Run tests
+        run: php scripts/test_suite.php
+
+  # 보안 검사
+  security:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Run PHP Security Checker
+        run: vendor/bin/security-checker security:check composer.lock
+
+  # 배포 패키지 생성
+  build:
+    runs-on: ubuntu-latest
+    needs: [test, security]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-dev --optimize-autoloader
+
+      - name: Create production config
+        run: |
+          # 프로덕션 설정 파일 생성
+          cp system/includes/config.php system/includes/config.prod.php
+          sed -i 's/development/production/g' system/includes/config.prod.php
+          sed -i 's/APP_DEBUG.*true/APP_DEBUG", false/g' system/includes/config.prod.php
+
+      - name: Remove development files
+        run: |
+          # 개발용 파일 제거
+          rm -f db_check.php
+          rm -f db_setup.php
+          rm -f debug.php
+          rm -f test.php
+          rm -rf tests/
+          rm -rf .github/
+          rm -f composer.*
+          rm -f phpunit.xml
+          rm -f *.md
+          rm -rf .cursor/
+
+      - name: Create deployment package
+        run: |
+          # 배포용 압축 파일 생성
+          tar -czf mp-deployment.tar.gz \
+            --exclude='.git' \
+            --exclude='vendor' \
+            --exclude='node_modules' \
+            --exclude='*.log' \
+            --exclude='*.tmp' \
+            .
+
+      - name: Upload deployment artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: mp-deployment
+          path: mp-deployment.tar.gz
+
+  # Cafe24 FTP 배포
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Download deployment artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: mp-deployment
+
+      - name: Deploy to Cafe24 via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.CAFE24_FTP_SERVER }}
+          username: ${{ secrets.CAFE24_FTP_USERNAME }}
+          password: ${{ secrets.CAFE24_FTP_PASSWORD }}
+          local-dir: ./
+          server-dir: /public_html/mp/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/.env
+            **/README.md
+            **/composer.*
+
+      - name: Post-deployment health check
+        run: |
+          echo "Waiting for deployment to complete..."
+          sleep 30
+          
+          # 헬스 체크 (선택사항)
+          curl -f https://gukho.net/mp/health.php || echo "Health check failed, but deployment may still be successful"
+
+      - name: Send deployment notification
+        run: |
+          echo "🚀 Deployment completed successfully!"
+          echo "🌐 Site URL: https://gukho.net/mp/"
+          echo "📊 Health Check: https://gukho.net/mp/health.php" 

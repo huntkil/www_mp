@@ -1,0 +1,186 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # 코드 품질 검사
+  code-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, sqlite3
+          coverage: xdebug
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Run PHP CS Fixer
+        run: vendor/bin/php-cs-fixer fix --dry-run --diff
+
+      - name: Run PHPStan
+        run: vendor/bin/phpstan analyse --level=5
+
+      - name: Run PHP Mess Detector
+        run: vendor/bin/phpmd . text cleancode,codesize,controversial,design,naming,unusedcode
+
+  # 테스트 실행
+  test:
+    runs-on: ubuntu-latest
+    needs: code-quality
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, sqlite3
+          coverage: xdebug
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Create test database
+        run: |
+          mkdir -p tests/database
+          touch tests/database/test.sqlite
+
+      - name: Run unit tests
+        run: vendor/bin/phpunit --testsuite=Unit
+
+      - name: Run integration tests
+        run: vendor/bin/phpunit --testsuite=Integration
+
+      - name: Generate coverage report
+        run: vendor/bin/phpunit --coverage-clover=coverage.xml
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage.xml
+          flags: unittests
+          name: codecov-umbrella
+
+  # 보안 검사
+  security:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Run PHP Security Checker
+        run: vendor/bin/security-checker security:check composer.lock
+
+      - name: Run PHPCS Security Audit
+        run: vendor/bin/phpcs --standard=Security /path/to/your/code
+
+  # 빌드 및 아티팩트 생성
+  build:
+    runs-on: ubuntu-latest
+    needs: [test, security]
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-dev --optimize-autoloader
+
+      - name: Create production config
+        run: |
+          cp system/includes/config.php system/includes/config.prod.php
+          sed -i 's/development/production/g' system/includes/config.prod.php
+
+      - name: Create deployment package
+        run: |
+          tar -czf deployment.tar.gz \
+            --exclude='.git' \
+            --exclude='tests' \
+            --exclude='vendor' \
+            --exclude='composer.*' \
+            --exclude='phpunit.xml' \
+            --exclude='.github' \
+            --exclude='*.md' \
+            .
+
+      - name: Upload deployment artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: deployment-package
+          path: deployment.tar.gz
+
+  # 개발 환경 배포
+  deploy-dev:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/develop'
+    environment: development
+    steps:
+      - name: Download deployment artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: deployment-package
+
+      - name: Deploy to development server
+        run: |
+          echo "Deploying to development server..."
+          # 여기에 개발 서버 배포 스크립트 추가
+          # 예: rsync, scp, 또는 FTP 업로드
+
+  # 프로덕션 환경 배포
+  deploy-prod:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    environment: production
+    steps:
+      - name: Download deployment artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: deployment-package
+
+      - name: Deploy to production server
+        run: |
+          echo "Deploying to production server..."
+          # 여기에 프로덕션 서버 배포 스크립트 추가
+          # 예: Cafe24 FTP 업로드
+
+      - name: Run database migrations
+        run: |
+          echo "Running database migrations..."
+          # 데이터베이스 마이그레이션 실행
+
+      - name: Clear cache
+        run: |
+          echo "Clearing application cache..."
+          # 캐시 정리
+
+      - name: Health check
+        run: |
+          echo "Performing health check..."
+          # 배포 후 헬스 체크 

@@ -1,0 +1,32 @@
+{
+    "admin": {
+        "password": "$2y$12$n5BG2GGIjxterA62dua4eecZC9QnPBFIFocvvdN9Sshyde22tzRaa",
+        "name": "Administrator",
+        "role": "admin",
+        "email": "admin@example.com",
+        "created_at": "2025-01-01 00:00:00",
+        "last_login": "2025-07-07 07:37:01",
+        "login_attempts": 0,
+        "status": "active"
+    },
+    "test": {
+        "password": "$2y$12$75Wl\/\/\/ubyXS9I5PgYdj9OUFs0Zm0fh0ncybY9X8yHC2OhR2UhPTq",
+        "name": "Test User",
+        "role": "user",
+        "email": "test@example.com",
+        "created_at": "2025-01-01 00:00:00",
+        "last_login": null,
+        "login_attempts": 1,
+        "status": "active"
+    },
+    "demo": {
+        "password": "$2y$12$.vONIbpUwV45o.NI\/kTgouiZRbg\/fb5PBBvnd1r9MhNoVWxEhQTfK",
+        "name": "Demo User",
+        "role": "user",
+        "email": "demo@example.com",
+        "created_at": "2025-01-01 00:00:00",
+        "last_login": "2025-07-07 06:56:28",
+        "login_attempts": 0,
+        "status": "active"
+    }
+}

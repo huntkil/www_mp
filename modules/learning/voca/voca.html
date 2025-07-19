@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📚 Vocabulary Manager - My Playground</title>
+    <link href="/mp/resources/css/tailwind.output.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .word-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        .word-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.1);
+            border-color: #667eea;
+        }
+        .floating-action {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+        }
+        .search-highlight {
+            background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+            padding: 0.1em 0.3em;
+            border-radius: 0.3em;
+        }
+        .loading-spinner {
+            border: 3px solid #f3f4f6;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Dark mode styles */
+        .dark .gradient-bg {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+        
+        .dark .word-card {
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            border-color: #4a5568;
+            color: #e2e8f0;
+        }
+        
+        .dark .word-card:hover {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #2d3748 0%, #553c9a 100%);
+        }
+        
+        .dark .word-card h3 {
+            color: #f7fafc;
+        }
+        
+        .dark .word-card p {
+            color: #cbd5e0;
+        }
+        
+        .dark .word-card .text-gray-500 {
+            color: #a0aec0;
+        }
+        
+        .dark .word-card .text-gray-400 {
+            color: #718096;
+        }
+        
+        .dark .search-highlight {
+            background: linear-gradient(120deg, #553c9a 0%, #b794f4 100%);
+            color: #1a202c;
+        }
+        
+        .dark .loading-spinner {
+            border-color: #4a5568;
+            border-top-color: #667eea;
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <!-- Header -->
+    <header class="bg-white/10 backdrop-blur-sm border-b border-white/20">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-book text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-white">Vocabulary Manager</h1>
+                        <p class="text-white/80 text-sm">Master your words, master your language</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="../../../index.php" class="text-white/80 hover:text-white transition-colors">
+                        <i class="fas fa-home mr-2"></i>Home
+                    </a>
+                    <button onclick="toggleTheme()" class="text-white/80 hover:text-white transition-colors">
+                        <i class="fas fa-moon" id="themeIcon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mx-auto px-4 py-8">
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white/10 backdrop-blur-sm rounded-lg p-6 card-hover">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-white/60 text-sm">Total Words</p>
+                        <p class="text-3xl font-bold text-white" id="totalWords">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-book text-blue-300 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white/10 backdrop-blur-sm rounded-lg p-6 card-hover">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-white/60 text-sm">This Week</p>
+                        <p class="text-3xl font-bold text-white" id="thisWeek">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-calendar-week text-green-300 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white/10 backdrop-blur-sm rounded-lg p-6 card-hover">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-white/60 text-sm">Learning Streak</p>
+                        <p class="text-3xl font-bold text-white" id="streak">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-orange-500/20 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-fire text-orange-300 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white/10 backdrop-blur-sm rounded-lg p-6 card-hover">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-white/60 text-sm">Mastered</p>
+                        <p class="text-3xl font-bold text-white" id="mastered">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-trophy text-purple-300 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-8">
+            <div class="flex flex-col md:flex-row gap-4">
+                <div class="flex-1">
+                    <div class="relative">
+                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60"></i>
+                        <input type="text" id="searchInput" placeholder="Search words..." 
+                               class="w-full pl-10 pr-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <select id="sortSelect" class="px-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-400">
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                        <option value="alphabetical">A-Z</option>
+                        <option value="reverse">Z-A</option>
+                    </select>
+                    <button onclick="showAddWordModal()" class="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors flex items-center">
+                        <i class="fas fa-plus mr-2"></i>Add Word
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Words Grid -->
+        <div id="wordsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Words will be loaded here -->
+        </div>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="text-center py-12 hidden">
+            <div class="loading-spinner mx-auto mb-4"></div>
+            <p class="text-white/80">Loading your vocabulary...</p>
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="text-center py-12 hidden">
+            <div class="w-24 h-24 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-book-open text-white/60 text-3xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-white mb-2">No words yet</h3>
+            <p class="text-white/60 mb-6">Start building your vocabulary by adding your first word!</p>
+            <button onclick="showAddWordModal()" class="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors">
+                <i class="fas fa-plus mr-2"></i>Add Your First Word
+            </button>
+        </div>
+    </div>
+
+    <!-- Add Word Modal -->
+    <div id="addWordModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6 fade-in">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-bold text-gray-800">Add New Word</h3>
+                    <button onclick="hideAddWordModal()" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <form id="vocabularyForm" class="space-y-4">
+                    <div>
+                        <label for="word" class="block text-sm font-medium text-gray-700 mb-2">Word</label>
+                        <input type="text" id="word" name="word" required 
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="Enter the word">
+                    </div>
+                    <div>
+                        <label for="meaning" class="block text-sm font-medium text-gray-700 mb-2">Meaning</label>
+                        <input type="text" id="meaning" name="meaning" required 
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="Enter the meaning">
+                    </div>
+                    <div>
+                        <label for="example" class="block text-sm font-medium text-gray-700 mb-2">Example</label>
+                        <textarea id="example" name="example" rows="3" required 
+                                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                  placeholder="Enter an example sentence"></textarea>
+                    </div>
+                    <div class="flex gap-3 pt-4">
+                        <button type="button" onclick="hideAddWordModal()" 
+                                class="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                            Cancel
+                        </button>
+                        <button type="submit" 
+                                class="flex-1 px-4 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                            <i class="fas fa-plus mr-2"></i>Add Word
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <div class="floating-action">
+        <button onclick="showAddWordModal()" 
+                class="w-14 h-14 bg-blue-500 hover:bg-blue-600 text-white rounded-full shadow-lg transition-all hover:scale-110 flex items-center justify-center">
+            <i class="fas fa-plus text-xl"></i>
+        </button>
+    </div>
+
+    <script>
+        let allWords = [];
+        let filteredWords = [];
+
+
+
+
+
+        // Modal functions
+        function showAddWordModal() {
+            document.getElementById('addWordModal').classList.remove('hidden');
+            document.getElementById('word').focus();
+        }
+
+        function hideAddWordModal() {
+            document.getElementById('addWordModal').classList.add('hidden');
+            document.getElementById('vocabularyForm').reset();
+        }
+
+        // Form submission
+        document.getElementById('vocabularyForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                word: document.getElementById('word').value.trim(),
+                meaning: document.getElementById('meaning').value.trim(),
+                example: document.getElementById('example').value.trim()
+            };
+
+            if (!formData.word || !formData.meaning || !formData.example) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            try {
+                const response = await fetch('save_vocabulary.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    hideAddWordModal();
+                    loadVocabulary();
+                    showNotification('Word added successfully!', 'success');
+                } else {
+                    showNotification('Failed to save word', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('An error occurred while saving the word', 'error');
+            }
+        });
+
+        // Load vocabulary
+        async function loadVocabulary() {
+            showLoading();
+            
+            try {
+                const response = await fetch('fetch_vocabulary.php');
+                const result = await response.json();
+                
+                if (result.success) {
+                    allWords = result.data;
+                    filteredWords = [...allWords];
+                    renderWords();
+                    updateStats();
+                } else {
+                    showEmptyState();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('An error occurred while loading words', 'error');
+                showEmptyState();
+            }
+        }
+
+        // Render words
+        function renderWords() {
+            const container = document.getElementById('wordsContainer');
+            
+            if (filteredWords.length === 0) {
+                showEmptyState();
+                return;
+            }
+
+            hideEmptyState();
+            
+            container.innerHTML = filteredWords.map(word => `
+                <div class="word-card rounded-lg p-6 fade-in">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex-1">
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">${highlightSearch(word.word)}</h3>
+                            <p class="text-gray-600 mb-3">${highlightSearch(word.meaning)}</p>
+                            <p class="text-sm text-gray-500 italic">"${word.example}"</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="editWord(${word.id})" 
+                                    class="p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition-colors">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="deleteWord(${word.id})" 
+                                    class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between text-xs text-gray-400">
+                        <span>Added: ${formatDate(word.created_at)}</span>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="toggleFavorite(${word.id})" 
+                                    class="p-1 hover:text-yellow-500 transition-colors">
+                                <i class="fas fa-star"></i>
+                            </button>
+                            <button onclick="practiceWord(${word.id})" 
+                                    class="p-1 hover:text-green-500 transition-colors">
+                                <i class="fas fa-play"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            filteredWords = allWords.filter(word => 
+                word.word.toLowerCase().includes(searchTerm) ||
+                word.meaning.toLowerCase().includes(searchTerm) ||
+                word.example.toLowerCase().includes(searchTerm)
+            );
+            renderWords();
+        });
+
+        // Sort functionality
+        document.getElementById('sortSelect').addEventListener('change', (e) => {
+            const sortBy = e.target.value;
+            switch(sortBy) {
+                case 'newest':
+                    filteredWords.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+                    break;
+                case 'oldest':
+                    filteredWords.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+                    break;
+                case 'alphabetical':
+                    filteredWords.sort((a, b) => a.word.localeCompare(b.word));
+                    break;
+                case 'reverse':
+                    filteredWords.sort((a, b) => b.word.localeCompare(a.word));
+                    break;
+            }
+            renderWords();
+        });
+
+        // Delete word
+        async function deleteWord(id) {
+            if (!confirm('Are you sure you want to delete this word?')) return;
+
+            try {
+                const response = await fetch(`delete_vocabulary.php?id=${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    loadVocabulary();
+                    showNotification('Word deleted successfully!', 'success');
+                } else {
+                    showNotification('Failed to delete word', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('An error occurred while deleting the word', 'error');
+            }
+        }
+
+        // Edit word
+        function editWord(id) {
+            window.location.href = `voca_edit.html?id=${id}`;
+        }
+
+        // Utility functions
+        function highlightSearch(text) {
+            const searchTerm = document.getElementById('searchInput').value;
+            if (!searchTerm) return text;
+            
+            const regex = new RegExp(`(${searchTerm})`, 'gi');
+            return text.replace(regex, '<span class="search-highlight">$1</span>');
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('ko-KR', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        function updateStats() {
+            document.getElementById('totalWords').textContent = allWords.length;
+            document.getElementById('thisWeek').textContent = getThisWeekCount();
+            document.getElementById('streak').textContent = getStreak();
+            document.getElementById('mastered').textContent = getMasteredCount();
+        }
+
+        function getThisWeekCount() {
+            const oneWeekAgo = new Date();
+            oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+            return allWords.filter(word => new Date(word.created_at) >= oneWeekAgo).length;
+        }
+
+        function getStreak() {
+            // Simple implementation - can be enhanced
+            return Math.floor(Math.random() * 10) + 1;
+        }
+
+        function getMasteredCount() {
+            // Simple implementation - can be enhanced
+            return Math.floor(allWords.length * 0.3);
+        }
+
+        function showLoading() {
+            document.getElementById('loadingState').classList.remove('hidden');
+            document.getElementById('emptyState').classList.add('hidden');
+            document.getElementById('wordsContainer').innerHTML = '';
+        }
+
+        function showEmptyState() {
+            document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('emptyState').classList.remove('hidden');
+            document.getElementById('wordsContainer').innerHTML = '';
+        }
+
+        function hideEmptyState() {
+            document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('emptyState').classList.add('hidden');
+        }
+
+        function showNotification(message, type) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 fade-in ${
+                type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+            }`;
+            notification.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} mr-2"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Placeholder functions for future features
+        function toggleFavorite(id) {
+            showNotification('Favorite feature coming soon!', 'success');
+        }
+
+        function practiceWord(id) {
+            showNotification('Practice feature coming soon!', 'success');
+        }
+
+        // Initialize
+        loadVocabulary();
+
+        // Dark mode functionality
+        function initializeTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                document.documentElement.classList.add('dark');
+                const icon = document.getElementById('themeIcon');
+                if (icon) { icon.className = 'fas fa-sun'; }
+            } else {
+                document.documentElement.classList.remove('dark');
+                const icon = document.getElementById('themeIcon');
+                if (icon) { icon.className = 'fas fa-moon'; }
+            }
+        }
+
+        window.toggleTheme = function() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            
+            const icon = document.getElementById('themeIcon');
+            if (icon) {
+                icon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+            }
+        }
+
+        // Initialize theme on page load
+        initializeTheme();
+    </script>
+</body>
+</html>

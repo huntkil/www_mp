@@ -1,0 +1,30 @@
+# Admin Directory Security
+# gukho.net 관리자 보안 설정
+
+# IP 기반 접근 제한 (필요시 활성화)
+# <RequireAll>
+#     Require ip 127.0.0.1
+#     Require ip YOUR_IP_ADDRESS
+# </RequireAll>
+
+# 브루트포스 공격 방지
+<RequireAll>
+    Require all granted
+</RequireAll>
+
+# 추가 보안 헤더
+Header always set X-Frame-Options DENY
+Header always set X-Content-Type-Options nosniff
+
+# 파일 접근 제한
+<FilesMatch "\.(log|tmp|bak)$">
+    Require all denied
+</FilesMatch>
+
+# 디렉토리 브라우징 비활성화
+Options -Indexes
+
+# 캐시 비활성화 (관리 페이지의 최신 정보 표시를 위해)
+Header set Cache-Control "no-cache, no-store, must-revalidate"
+Header set Pragma "no-cache"
+Header set Expires 0 

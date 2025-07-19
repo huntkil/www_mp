@@ -1,0 +1,172 @@
+body {
+	background-color: #333;
+	color: #fff;
+	margin: 0;
+	padding: 0;
+}
+
+header {
+	background-color: #111;
+	color: #fff;
+	padding: 20px;
+}
+
+nav a {
+	color: #ccc;  /* 수정된 링크 색상 */
+	text-decoration: none;
+	margin-right: 10px;
+	transition: color 0.3s ease;
+}
+
+nav a:hover {
+	color: #60f642;  /* 수정된 hover 시 링크 색상 */
+}
+
+section {
+	margin: 50px;
+}
+
+table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+th, td {
+	text-align: left;
+	padding: 8px;
+	border-bottom: 1px solid #555;
+	color: #fff;
+}
+
+tr:hover {
+	background-color: #555;
+}
+
+tfoot tr td {
+	border: none;
+	border-top: 1px solid #555;
+	padding-top: 10px;
+	color: #fff;
+}
+
+footer {
+	background-color: #111;
+	color: #fff;
+	padding: 20px;
+	text-align: center;
+}
+
+input[type="text"],
+textarea {
+	width: 100%;
+	padding: 10px;
+	box-sizing: border-box;
+	border: 1px solid #888;
+	background-color: #444;
+	color: #fff;
+	border-radius: 4px;
+	resize: vertical;
+}
+
+input[type="submit"] {
+	background-color: #4CAF50;
+	color: #fff;
+	padding: 10px 20px;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+input[type="submit"]:hover {
+	background-color: #45a049;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    color: #fff;
+}
+
+.page-link {
+    padding: 8px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    margin: 0 5px;
+    color: #ffffff;
+}
+
+.page-link:hover {
+    background-color: #f2f2f2;
+    color: #0e0d0d;
+}
+
+.responsive-iframe-container {
+	position: relative;
+	width: 100%;
+	height: 80vh; /* 화면 높이의 80%를 차지하도록 설정 */
+}
+
+.responsive-iframe-container iframe {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	border: none;
+}
+
+/* 기본 스타일 */
+.search-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form-group {
+    width: 100%;
+}
+
+/* 데스크톱 화면을 위한 미디어 쿼리 */
+@media screen and (min-width: 600px) {
+    .search-form {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .form-group {
+        flex: 1;
+    }
+}
+
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #484848; /* 어두운 회색 배경 */
+    color: #ffffff; /* 밝은 텍스트 색상 */
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.container {
+    padding: 2px 16px;
+}
+
+
+
+/* 데스크톱 환경에서 카드 스타일 조정 */
+@media screen and (min-width: 600px) {
+    .card {
+        width: calc(33% - 20px); /* 데스크톱에서는 3개가 한 줄에 표시 */
+        margin-bottom: 20px;
+    }
+}

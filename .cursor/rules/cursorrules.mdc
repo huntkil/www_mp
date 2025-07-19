@@ -1,0 +1,254 @@
+---
+alwaysApply: true
+---
+
+# Cursor AI Project Rules - PHP/JavaScript Website Refactoring
+
+## Project Overview
+- **Legacy Website**: http://gukho.net/mp/
+- **Technology Stack**: PHP backend, JavaScript frontend
+- **Main Features**: Learning tools, card slideshows, vocabulary management, news search, health tracking, CRUD operations
+- **Goal**: Modern refactoring while maintaining functionality
+
+## Code Standards & Architecture
+
+### PHP Backend Rules
+- Use **PHP 7.4** features and syntax
+- Follow **PSR-4 autoloading** and **PSR-12 coding standards**
+- Implement **MVC pattern** with clear separation of concerns
+- Use **prepared statements** for all database operations (prevent SQL injection)
+- Implement proper **error handling** with try-catch blocks
+- Use **type declarations** for function parameters and return types
+- Create **service classes** for business logic separation
+- Implement **dependency injection** where applicable
+
+### JavaScript Frontend Rules
+- Use **ES6+ syntax** (const/let, arrow functions, async/await)
+- Implement **modular JavaScript** with import/export
+- Use **fetch API** instead of XMLHttpRequest
+- Implement **proper error handling** with try-catch for async operations
+- Follow **functional programming** principles where possible
+- Use **semantic HTML5** elements
+- Implement **responsive design** with CSS Grid/Flexbox
+- Add **accessibility attributes** (ARIA labels, alt texts, etc.)
+
+### Database & Security
+- Use **environment variables** for sensitive configuration
+- Implement **CSRF protection** for forms
+- Add **input validation** and **sanitization**
+- Use **password hashing** with PHP's password_hash()
+- Implement **session management** with secure settings
+- Add **rate limiting** for API endpoints
+- Use **HTTPS** and secure headers
+
+### File Structure
+```
+project/
+├── config/
+│   ├── database.php
+│   ├── app.php
+│   └── .env
+├── src/
+│   ├── Controllers/
+│   ├── Models/
+│   ├── Services/
+│   ├── Middleware/
+│   └── Utils/
+├── public/
+│   ├── assets/
+│   │   ├── css/
+│   │   ├── js/
+│   │   └── images/
+│   └── index.php
+├── views/
+│   ├── layouts/
+│   └── pages/
+└── tests/
+```
+
+## Specific Refactoring Guidelines
+
+### Learning Module (Card Slideshow, Word Cards, Vocabulary)
+- Create `LearningController` class
+- Implement `CardService` for card management
+- Use **JSON API responses** for AJAX operations
+- Add **progressive enhancement** for JavaScript features
+- Implement **local storage** for offline functionality
+- Add **keyboard navigation** support
+
+### Tools Module (News Search, Family Tour, Box Breathing)
+- Create separate controller for each tool
+- Implement **API rate limiting** for external news API
+- Use **async/await** for all API calls
+- Add **loading states** and **error handling** in UI
+- Implement **caching** for news search results
+
+### Management Module (CRUD Demo, My Health)
+- Use **RESTful API design** (GET, POST, PUT, DELETE)
+- Implement **data validation** on both client and server
+- Add **pagination** for large datasets
+- Use **modal dialogs** for CRUD operations
+- Implement **confirmation dialogs** for delete operations
+
+### Authentication & Security
+- Implement **JWT tokens** for API authentication
+- Add **2FA support** (optional enhancement)
+- Use **bcrypt** for password hashing
+- Implement **password reset** functionality
+- Add **login attempt limiting**
+
+## Performance Optimization
+
+### Frontend Performance
+- **Minify and compress** CSS/JavaScript files
+- Implement **lazy loading** for images
+- Use **critical CSS** for above-the-fold content
+- Add **service worker** for caching
+- Optimize images with **WebP format**
+- Use **CDN** for static assets
+
+### Backend Performance
+- Implement **database connection pooling**
+- Add **query optimization** and indexing
+- Use **caching layers** (Redis/Memcached)
+- Implement **gzip compression**
+- Add **database query logging** for optimization
+
+## Code Quality & Testing
+
+### Code Quality Rules
+- **Maximum function length**: 20 lines
+- **Maximum file length**: 200 lines
+- Use **meaningful variable names** (no abbreviations)
+- Add **PHPDoc comments** for all functions
+- Implement **unit tests** for critical functions
+- Use **linting tools** (PHP CS Fixer, ESLint)
+
+### Testing Requirements
+- **Unit tests** for all service classes
+- **Integration tests** for API endpoints
+- **Frontend tests** for critical user flows
+- **Database tests** with test fixtures
+- **Minimum 80% code coverage**
+
+## Documentation & Maintenance
+
+### Documentation Requirements
+- **API documentation** with request/response examples
+- **Database schema** documentation
+- **Setup and deployment** instructions
+- **Code comments** for complex logic
+- **Changelog** for version tracking
+
+### Git Workflow
+- Use **feature branches** for all changes
+- **Commit messages** in conventional format
+- **Pull request reviews** required
+- **Automated testing** on push
+- **Semantic versioning** for releases
+
+## Browser Support & Compatibility
+- Support **modern browsers** (Chrome 90+, Firefox 88+, Safari 14+, Edge 90+)
+- **Progressive enhancement** for older browsers
+- **Mobile-first** responsive design
+- **Cross-browser testing** required
+
+## Deployment & DevOps
+- Use **Docker containers** for consistent environments
+- Implement **CI/CD pipeline**
+- **Environment-specific** configurations
+- **Database migrations** for schema changes
+- **Backup strategies** for production data
+- **Monitoring and logging** setup
+
+## Specific Feature Enhancements
+
+### Card Slideshow
+- Add **touch/swipe gestures** for mobile
+- Implement **auto-play** with pause on hover
+- Add **keyboard shortcuts** (arrow keys, space)
+- Support **multiple card sets**
+
+### Vocabulary Management
+- Add **spaced repetition** algorithm
+- Implement **progress tracking**
+- Support **multiple languages**
+- Add **export/import** functionality
+
+### News Search
+- Implement **search filters** (date, source, category)
+- Add **search history**
+- Support **bookmarking** articles
+- Implement **real-time search suggestions**
+
+### Health Tracking
+- Add **data visualization** with charts
+- Implement **goal setting** and tracking
+- Support **data export** (CSV, JSON)
+- Add **reminder notifications**
+
+## Error Handling & Logging
+
+### Error Handling Rules
+- **Never expose** sensitive information in error messages
+- Use **custom exception classes** for different error types
+- Implement **graceful degradation** for JavaScript errors
+- Add **user-friendly error pages**
+- Log all errors with **context information**
+
+### Logging Requirements
+- **Separate log files** for different components
+- **Rotation policies** for log files
+- **Structured logging** with JSON format
+- **Performance metrics** logging
+- **Security event** logging
+
+## Accessibility & UX
+
+### Accessibility Requirements
+- **WCAG 2.1 Level AA** compliance
+- **Screen reader** compatibility
+- **Keyboard navigation** support
+- **High contrast** mode support
+- **Focus indicators** for all interactive elements
+
+### UX Improvements
+- **Loading states** for all async operations
+- **Success/error notifications** for user actions
+- **Breadcrumb navigation**
+- **Search functionality** across modules
+- **Dark/light theme** toggle
+
+## Migration Strategy
+
+### Phase 1: Foundation
+1. Set up new project structure
+2. Migrate database schema
+3. Implement basic routing
+4. Set up authentication system
+
+### Phase 2: Core Features
+1. Refactor learning modules
+2. Implement tools functionality
+3. Build management interface
+4. Add API endpoints
+
+### Phase 3: Enhancement
+1. Add advanced features
+2. Implement performance optimizations
+3. Complete testing suite
+4. Deploy to production
+
+## Code Review Checklist
+- [ ] Follows PSR-12 coding standards
+- [ ] Includes proper error handling
+- [ ] Has security measures implemented
+- [ ] Includes unit tests
+- [ ] Documentation is updated
+- [ ] Performance considerations addressed
+- [ ] Accessibility requirements met
+- [ ] Cross-browser compatibility tested
+
+---
+
+**Remember**: Always prioritize security, performance, and maintainability over quick fixes. Each component should be thoroughly tested before deployment.
