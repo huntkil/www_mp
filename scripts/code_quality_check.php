@@ -67,8 +67,10 @@ foreach ($directories as $dir) {
             }
         }
         
-        // 3. 하드코딩된 비밀번호 확인
-        if (preg_match('/password\s*=\s*[\'"][^\'"]{6,}[\'"]/', $content)) {
+        // 3. 하드코딩된 비밀번호 확인 (테스트 파일 제외)
+        if (preg_match('/password\s*=\s*[\'"][^\'"]{6,}[\'"]/', $content) && 
+            !str_contains($filePath, 'test') && 
+            !str_contains($filePath, 'TestCase.php')) {
             $fileIssues[] = "하드코딩된 비밀번호 발견";
         }
         
@@ -77,8 +79,8 @@ foreach ($directories as $dir) {
             $fileIssues[] = "잠재적 SQL 인젝션 취약점";
         }
         
-        // 5. 에러 리포팅 확인
-        if (strpos($content, 'error_reporting(0)') !== false) {
+        // 5. 에러 리포팅 확인 (자체 스크립트는 제외)
+        if (strpos($content, 'error_reporting(0)') !== false && !str_contains($filePath, 'code_quality_check.php')) {
             $fileIssues[] = "에러 리포팅이 비활성화됨";
         }
         

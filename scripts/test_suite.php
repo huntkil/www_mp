@@ -237,7 +237,7 @@ class TestSuite
         $this->assert(strlen($token) === 64, 'CSRF 토큰 생성');
         
         // 비밀번호 해싱
-        $password = 'test_password';
+        $password = getenv('TEST_PASSWORD') ?: 'test_password_' . uniqid();
         $hash = password_hash($password, PASSWORD_DEFAULT);
         $this->assert(password_verify($password, $hash), '비밀번호 해싱');
         

@@ -356,57 +356,46 @@ class ApiDocGenerator
     private function generateResponses(ReflectionMethod $method): array
     {
         $responses = [
-            '200' => [
-                'description' => 'Successful operation',
-                'content' => [
-                    'application/json' => [
-                        'schema' => $this->extractResponseSchema($method)
-                    ]
+            '200' => $this->createSuccessResponse($method),
+            '400' => $this->createErrorResponse('Bad request'),
+            '401' => $this->createErrorResponse('Unauthorized'),
+            '404' => $this->createErrorResponse('Not found'),
+            '500' => $this->createErrorResponse('Internal server error')
+        ];
+
+        return $responses;
+    }
+
+    /**
+     * 성공 응답 생성
+     */
+    private function createSuccessResponse(ReflectionMethod $method): array
+    {
+        return [
+            'description' => 'Successful operation',
+            'content' => [
+                'application/json' => [
+                    'schema' => $this->extractResponseSchema($method)
                 ]
-            ],
-            '400' => [
-                'description' => 'Bad request',
-                'content' => [
-                    'application/json' => [
-                        'schema' => [
-                            '$ref' => '#/components/schemas/ErrorResponse'
-                        ]
-                    ]
-                ]
-            ],
-            '401' => [
-                'description' => 'Unauthorized',
-                'content' => [
-                    'application/json' => [
-                        'schema' => [
-                            '$ref' => '#/components/schemas/ErrorResponse'
-                        ]
-                    ]
-                ]
-            ],
-            '404' => [
-                'description' => 'Not found',
-                'content' => [
-                    'application/json' => [
-                        'schema' => [
-                            '$ref' => '#/components/schemas/ErrorResponse'
-                        ]
-                    ]
-                ]
-            ],
-            '500' => [
-                'description' => 'Internal server error',
-                'content' => [
-                    'application/json' => [
-                        'schema' => [
-                            '$ref' => '#/components/schemas/ErrorResponse'
-                        ]
+            ]
+        ];
+    }
+
+    /**
+     * 에러 응답 생성
+     */
+    private function createErrorResponse(string $description): array
+    {
+        return [
+            'description' => $description,
+            'content' => [
+                'application/json' => [
+                    'schema' => [
+                        '$ref' => '#/components/schemas/ErrorResponse'
                     ]
                 ]
             ]
         ];
-
-        return $responses;
     }
 
     /**
@@ -501,110 +490,134 @@ class ApiDocGenerator
     private function generateSchemas(): array
     {
         $schemas = [
-            'ErrorResponse' => [
-                'type' => 'object',
-                'properties' => [
-                    'success' => [
-                        'type' => 'boolean',
-                        'example' => false
-                    ],
-                    'message' => [
-                        'type' => 'string',
-                        'example' => 'Error message'
-                    ],
-                    'errors' => [
-                        'type' => 'object',
-                        'description' => 'Field-specific errors'
-                    ]
-                ]
-            ],
-            'Vocabulary' => [
-                'type' => 'object',
-                'properties' => [
-                    'id' => [
-                        'type' => 'integer',
-                        'format' => 'int64',
-                        'example' => 1
-                    ],
-                    'word' => [
-                        'type' => 'string',
-                        'example' => 'serendipity'
-                    ],
-                    'meaning' => [
-                        'type' => 'string',
-                        'example' => '뜻밖의 발견'
-                    ],
-                    'example' => [
-                        'type' => 'string',
-                        'example' => 'Finding that book was pure serendipity.'
-                    ],
-                    'language' => [
-                        'type' => 'string',
-                        'enum' => ['en', 'ko', 'ja'],
-                        'example' => 'en'
-                    ],
-                    'difficulty' => [
-                        'type' => 'string',
-                        'enum' => ['easy', 'medium', 'hard'],
-                        'example' => 'hard'
-                    ],
-                    'is_learned' => [
-                        'type' => 'boolean',
-                        'example' => false
-                    ],
-                    'created_at' => [
-                        'type' => 'string',
-                        'format' => 'date-time',
-                        'example' => '2024-01-01T00:00:00Z'
-                    ],
-                    'updated_at' => [
-                        'type' => 'string',
-                        'format' => 'date-time',
-                        'example' => '2024-01-01T00:00:00Z'
-                    ]
-                ]
-            ],
-            'User' => [
-                'type' => 'object',
-                'properties' => [
-                    'id' => [
-                        'type' => 'integer',
-                        'format' => 'int64',
-                        'example' => 1
-                    ],
-                    'username' => [
-                        'type' => 'string',
-                        'example' => 'john_doe'
-                    ],
-                    'email' => [
-                        'type' => 'string',
-                        'format' => 'email',
-                        'example' => 'john@example.com'
-                    ],
-                    'full_name' => [
-                        'type' => 'string',
-                        'example' => 'John Doe'
-                    ],
-                    'role' => [
-                        'type' => 'string',
-                        'enum' => ['user', 'admin'],
-                        'example' => 'user'
-                    ],
-                    'status' => [
-                        'type' => 'string',
-                        'enum' => ['active', 'inactive'],
-                        'example' => 'active'
-                    ],
-                    'created_at' => [
-                        'type' => 'string',
-                        'format' => 'date-time',
-                        'example' => '2024-01-01T00:00:00Z'
-                    ]
-                ]
-            ]
+            'ErrorResponse' => $this->createErrorResponseSchema(),
+            'Vocabulary' => $this->createVocabularySchema(),
+            'User' => $this->createUserSchema()
         ];
 
         return $schemas;
+    }
+
+    /**
+     * 에러 응답 스키마 생성
+     */
+    private function createErrorResponseSchema(): array
+    {
+        return [
+            'type' => 'object',
+            'properties' => [
+                'success' => [
+                    'type' => 'boolean',
+                    'example' => false
+                ],
+                'message' => [
+                    'type' => 'string',
+                    'example' => 'Error message'
+                ],
+                'errors' => [
+                    'type' => 'object',
+                    'description' => 'Field-specific errors'
+                ]
+            ]
+        ];
+    }
+
+    /**
+     * 어휘 스키마 생성
+     */
+    private function createVocabularySchema(): array
+    {
+        return [
+            'type' => 'object',
+            'properties' => [
+                'id' => [
+                    'type' => 'integer',
+                    'format' => 'int64',
+                    'example' => 1
+                ],
+                'word' => [
+                    'type' => 'string',
+                    'example' => 'serendipity'
+                ],
+                'meaning' => [
+                    'type' => 'string',
+                    'example' => '뜻밖의 발견'
+                ],
+                'example' => [
+                    'type' => 'string',
+                    'example' => 'Finding that book was pure serendipity.'
+                ],
+                'language' => [
+                    'type' => 'string',
+                    'enum' => ['en', 'ko', 'ja'],
+                    'example' => 'en'
+                ],
+                'difficulty' => [
+                    'type' => 'string',
+                    'enum' => ['easy', 'medium', 'hard'],
+                    'example' => 'hard'
+                ],
+                'is_learned' => [
+                    'type' => 'boolean',
+                    'example' => false
+                ],
+                'created_at' => [
+                    'type' => 'string',
+                    'format' => 'date-time',
+                    'example' => '2024-01-01T00:00:00Z'
+                ],
+                'updated_at' => [
+                    'type' => 'string',
+                    'format' => 'date-time',
+                    'example' => '2024-01-01T00:00:00Z'
+                ]
+            ]
+        ];
+    }
+
+    /**
+     * 사용자 스키마 생성
+     */
+    private function createUserSchema(): array
+    {
+        return [
+            'type' => 'object',
+            'properties' => [
+                'id' => [
+                    'type' => 'integer',
+                    'format' => 'int64',
+                    'example' => 1
+                ],
+                'username' => [
+                    'type' => 'string',
+                    'example' => 'john_doe'
+                ],
+                'email' => [
+                    'type' => 'string',
+                    'format' => 'email',
+                    'example' => 'john@example.com'
+                ],
+                'full_name' => [
+                    'type' => 'string',
+                    'example' => 'John Doe'
+                ],
+                'role' => [
+                    'type' => 'string',
+                    'enum' => ['user', 'admin'],
+                    'example' => 'user'
+                ],
+                'status' => [
+                    'type' => 'string',
+                    'enum' => ['active', 'inactive'],
+                    'example' => 'active'
+                ],
+                'created_at' => [
+                    'type' => 'string',
+                    'format' => 'date-time',
+                    'example' => '2024-01-01T00:00:00Z'
+                ]
+            ]
+        ];
     }
 
     /**
