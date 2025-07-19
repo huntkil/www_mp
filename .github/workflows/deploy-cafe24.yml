@@ -113,14 +113,64 @@ jobs:
 
       - name: Create deployment package
         run: |
-          # 배포용 압축 파일 생성
-          tar -czf mp-deployment.tar.gz \
-            --exclude='.git' \
-            --exclude='vendor' \
-            --exclude='node_modules' \
-            --exclude='*.log' \
-            --exclude='*.tmp' \
-            .
+          # 배포용 압축 파일 생성 (더 안정적인 방법)
+          echo "Creating deployment package..."
+          
+          # 임시 디렉토리 생성
+          mkdir -p temp-deploy
+          
+          # 필요한 파일들만 복사 (오류 처리 포함)
+          for dir in system modules resources api scripts config lib docs; do
+            if [ -d "$dir" ]; then
+              echo "Copying $dir..."
+              cp -r "$dir" temp-deploy/ || echo "Warning: Failed to copy $dir"
+            fi
+          done
+          
+          # 개별 파일 복사
+          for file in index.php favicon.ico LICENSE; do
+            if [ -f "$file" ]; then
+              echo "Copying $file..."
+              cp "$file" temp-deploy/ || echo "Warning: Failed to copy $file"
+            fi
+          done
+          
+          # 개발용 파일 제거
+          echo "Removing development files..."
+          rm -f temp-deploy/db_check.php
+          rm -f temp-deploy/db_setup.php
+          rm -f temp-deploy/debug.php
+          rm -f temp-deploy/test.php
+          rm -rf temp-deploy/tests/
+          rm -rf temp-deploy/.github/
+          rm -f temp-deploy/composer.*
+          rm -f temp-deploy/phpunit.xml
+          rm -f temp-deploy/*.md
+          rm -rf temp-deploy/.cursor/
+          
+          # 압축 파일 생성
+          echo "Creating tar.gz file..."
+          cd temp-deploy
+          tar -czf ../mp-deployment.tar.gz . || {
+            echo "Error: Failed to create tar.gz file"
+            exit 1
+          }
+          cd ..
+          
+          # 임시 디렉토리 정리
+          rm -rf temp-deploy
+          
+          echo "Deployment package created successfully"
+          ls -la mp-deployment.tar.gz
+          
+          # 파일 크기 확인
+          if [ -f "mp-deployment.tar.gz" ]; then
+            size=$(stat -c%s mp-deployment.tar.gz 2>/dev/null || stat -f%z mp-deployment.tar.gz 2>/dev/null || echo "unknown")
+            echo "Package size: $size bytes"
+          else
+            echo "Error: Package file not created"
+            exit 1
+          fi
 
       - name: Upload deployment artifact
         uses: actions/upload-artifact@v4
