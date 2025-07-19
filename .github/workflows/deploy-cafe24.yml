@@ -184,10 +184,37 @@ jobs:
     needs: build
     if: github.ref == 'refs/heads/main'
     steps:
-      - name: Download deployment artifact
-        uses: actions/download-artifact@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
         with:
-          name: mp-deployment
+          php-version: '8.2'
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-dev --optimize-autoloader
+
+      - name: Create production config
+        run: |
+          # 프로덕션 설정 파일 생성
+          cp system/includes/config.php system/includes/config.prod.php
+          sed -i 's/development/production/g' system/includes/config.prod.php
+          sed -i 's/APP_DEBUG.*true/APP_DEBUG", false/g' system/includes/config.prod.php
+
+      - name: Remove development files
+        run: |
+          # 개발용 파일 제거
+          rm -f db_check.php
+          rm -f db_setup.php
+          rm -f debug.php
+          rm -f test.php
+          rm -rf tests/
+          rm -rf .github/
+          rm -f composer.*
+          rm -f phpunit.xml
+          rm -f *.md
+          rm -rf .cursor/
 
       - name: Deploy to Cafe24 via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -204,6 +231,8 @@ jobs:
             **/.env
             **/README.md
             **/composer.*
+            **/*.tar.gz
+            **/temp-deploy/**
 
       - name: Post-deployment health check
         run: |
