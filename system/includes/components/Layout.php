@@ -232,32 +232,7 @@ class Layout {
         return $html;
     }
     
-    public function renderThemeScript() {
-        $html = '<script>';
-        $html .= '(function() {';
-        $html .= '  const userTheme = localStorage.getItem("theme");';
-        $html .= '  if (userTheme === "dark" || (!userTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)) {';
-        $html .= '    document.documentElement.classList.add("dark");';
-        $html .= '    const icon = document.getElementById("themeIcon");';
-        $html .= '    if (icon) { icon.className = "fas fa-sun"; }';
-        $html .= '  } else {';
-        $html .= '    document.documentElement.classList.remove("dark");';
-        $html .= '    const icon = document.getElementById("themeIcon");';
-        $html .= '    if (icon) { icon.className = "fas fa-moon"; }';
-        $html .= '  }';
-        $html .= '  window.toggleTheme = function() {';
-        $html .= '    const isDark = document.documentElement.classList.toggle("dark");';
-        $html .= '    localStorage.setItem("theme", isDark ? "dark" : "light");';
-        $html .= '    const icon = document.getElementById("themeIcon");';
-        $html .= '    if (icon) {';
-        $html .= '      icon.className = isDark ? "fas fa-sun" : "fas fa-moon";';
-        $html .= '    }';
-        $html .= '  };';
-        $html .= '})();';
-        $html .= '</script>';
-        
-        return $html;
-    }
+
     
     public function renderClosing() {
         $html = '</body>';
