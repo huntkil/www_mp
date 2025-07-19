@@ -69,8 +69,8 @@ git push -u origin main
 ### 7. 배포 확인
 
 배포가 완료되면 다음 URL에서 확인:
-- 메인 사이트: `https://huntkil.cafe24.com/mp/`
-- 헬스 체크: `https://huntkil.cafe24.com/mp/health.php`
+- **메인 사이트**: `http://gukho.net/mp/`
+- **헬스 체크**: `http://gukho.net/mp/health.php`
 
 ## 🔒 보안 주의사항
 
@@ -94,4 +94,12 @@ git push -u origin main
 
 ### 권한 오류
 - `/public_html/mp/` 디렉토리 쓰기 권한 확인
-- FTP 계정이 해당 디렉토리에 접근 가능한지 확인 
+- FTP 계정이 해당 디렉토리에 접근 가능한지 확인
+
+## 🌐 사이트 정보
+
+- **도메인**: gukho.net
+- **호스팅**: Cafe24 (huntkil.cafe24.com)
+- **경로**: /mp/
+- **FTP 서버**: huntkil.cafe24.com
+- **FTP 사용자**: huntkil 

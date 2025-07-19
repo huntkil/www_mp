@@ -159,10 +159,10 @@ jobs:
           sleep 30
           
           # 헬스 체크 (선택사항)
-          curl -f https://gukho.net/mp/health.php || echo "Health check failed, but deployment may still be successful"
+          curl -f http://gukho.net/mp/health.php || echo "Health check failed, but deployment may still be successful"
 
       - name: Send deployment notification
         run: |
           echo "🚀 Deployment completed successfully!"
-          echo "🌐 Site URL: https://gukho.net/mp/"
-          echo "📊 Health Check: https://gukho.net/mp/health.php" 
+          echo "🌐 Site URL: http://gukho.net/mp/"
+          echo "📊 Health Check: http://gukho.net/mp/health.php" 
