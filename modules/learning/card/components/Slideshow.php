@@ -213,7 +213,7 @@ class Slideshow {
         $html .= '</div>';
         $html .= '</div>';
         $html .= '</div>';
-        $localCount = count(array_filter($this->images, function($img) { return !str_starts_with($img, 'http'); }));
+        $localCount = count(array_filter($this->images, function($img) { return !preg_match('/^https?:\/\//', $img); }));
         $onlineCount = count($this->images) - $localCount;
         $html .= '<div id="speedDisplay" class="text-sm text-muted-foreground text-center">Speed: ' . $this->displayDuration . 'ms</div>';
         $html .= '<div id="imageCount" class="text-sm text-muted-foreground text-center font-semibold">📸 Total Images: <span class="text-primary">' . count($this->images) . '</span> | Local: <span class="text-green-600">' . $localCount . '</span> | Online: <span class="text-blue-600">' . $onlineCount . '</span></div>';
