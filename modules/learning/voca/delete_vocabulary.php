@@ -10,9 +10,14 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') {
     exit();
 }
 
-require_once __DIR__ . '/../../../system/includes/config.php';
-
 try {
+    // Load appropriate config based on environment
+    if (file_exists(__DIR__ . '/../../../system/includes/config_production.php')) {
+        require_once __DIR__ . '/../../../system/includes/config_production.php';
+    } else {
+        require_once __DIR__ . '/../../../system/includes/config.php';
+    }
+
     // Get ID from different sources depending on request method
     $id = null;
     
@@ -45,6 +50,11 @@ try {
 
     $db = Database::getInstance();
     
+    // Check if vocabulary table exists
+    if (!$db->tableExists('vocabulary')) {
+        throw new Exception('Vocabulary table does not exist');
+    }
+    
     // Check if the record exists before deleting
     $existing = $db->selectOne("SELECT id FROM vocabulary WHERE id = ?", [$id]);
     if (!$existing) {
@@ -65,11 +75,11 @@ try {
     ]);
     
 } catch (Exception $e) {
+    error_log("Vocabulary delete error: " . $e->getMessage());
     http_response_code(500);
     echo json_encode([
-        'error' => $e->getMessage(),
-        'request_method' => $_SERVER['REQUEST_METHOD'] ?? 'unknown',
-        'received_id' => $id ?? 'none'
+        'error' => 'Failed to delete word',
+        'message' => IS_LOCAL ? $e->getMessage() : 'Please try again later'
     ]);
 }
 ?> 
