@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>로그인 - MP Learning</title>
-    <link href="/resources/css/tailwind.css" rel="stylesheet">
+    <link href="../../resources/css/tailwind.css" rel="stylesheet">
     <style>
         .auth-container {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);

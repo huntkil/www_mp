@@ -136,9 +136,9 @@ if (!isset($page_title)) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo isset($pageTitle) ? htmlspecialchars($pageTitle) . ' - ' : ''; ?>My Playground</title>
-    <link rel="stylesheet" href="/resources/css/tailwind.output.css">
+    <link rel="stylesheet" href="<?php echo $nav->getRootUrl(); ?>resources/css/tailwind.output.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="<?php echo $nav->getRootUrl(); ?>favicon.ico">
 
     <style>
         :root {
@@ -249,10 +249,10 @@ if (!isset($page_title)) {
                             <span>Learning</span>
                         </button>
                         <div id="learning-dropdown" class="absolute top-full mt-2 w-48 bg-popover border rounded-lg shadow-lg hidden">
-                            <a href="/modules/learning/card/slideshow.php" class="block px-4 py-2 hover:bg-accent text-sm">Card Slideshow</a>
-                            <a href="/modules/learning/card/wordcard_en.php" class="block px-4 py-2 hover:bg-accent text-sm">Word Cards (EN)</a>
-                            <a href="/modules/learning/card/wordcard_ko.php" class="block px-4 py-2 hover:bg-accent text-sm">Word Cards (KR)</a>
-                            <a href="/modules/learning/voca/voca.php" class="block px-4 py-2 hover:bg-accent text-sm">Vocabulary</a>
+                                            <a href="<?php echo $nav->getModuleUrl('learning/card/slideshow.php'); ?>" class="block px-4 py-2 hover:bg-accent text-sm">Card Slideshow</a>
+                <a href="<?php echo $nav->getModuleUrl('learning/card/wordcard_en.php'); ?>" class="block px-4 py-2 hover:bg-accent text-sm">Word Cards (EN)</a>
+                <a href="<?php echo $nav->getModuleUrl('learning/card/wordcard_ko.php'); ?>" class="block px-4 py-2 hover:bg-accent text-sm">Word Cards (KR)</a>
+                <a href="<?php echo $nav->getModuleUrl('learning/voca/voca.php'); ?>" class="block px-4 py-2 hover:bg-accent text-sm">Vocabulary</a>
                         </div>
                     </div>
 
@@ -264,9 +264,9 @@ if (!isset($page_title)) {
                             <span>Tools</span>
                         </button>
                         <div id="tools-dropdown" class="absolute top-full mt-2 w-48 bg-popover border rounded-lg shadow-lg hidden">
-                            <a href="/modules/tools/news/search_news_form.php" class="block px-4 py-2 hover:bg-accent text-sm">News Search</a>
-                            <a href="/modules/tools/tour/familytour.php" class="block px-4 py-2 hover:bg-accent text-sm">Family Tour</a>
-                            <a href="/modules/tools/box/boxbreathe.php" class="block px-4 py-2 hover:bg-accent text-sm">Box Breathing</a>
+                                            <a href="<?php echo $nav->getModuleUrl('tools/news/search_news_form.php'); ?>" class="block px-4 py-2 hover:bg-accent text-sm">News Search</a>
+                <a href="<?php echo $nav->getModuleUrl('tools/tour/familytour.php'); ?>" class="block px-4 py-2 hover:bg-accent text-sm">Family Tour</a>
+                <a href="<?php echo $nav->getModuleUrl('tools/box/boxbreathe.php'); ?>" class="block px-4 py-2 hover:bg-accent text-sm">Box Breathing</a>
                         </div>
                     </div>
 
@@ -280,8 +280,8 @@ if (!isset($page_title)) {
                             <span>Management</span>
                         </button>
                         <div id="management-dropdown" class="absolute top-full mt-2 w-48 bg-popover border rounded-lg shadow-lg hidden">
-                            <a href="/modules/management/crud/data_list.php" class="block px-4 py-2 hover:bg-accent text-sm">CRUD Demo</a>
-                            <a href="/modules/management/myhealth/health_list.php" class="block px-4 py-2 hover:bg-accent text-sm">My Health</a>
+                                            <a href="<?php echo $nav->getModuleUrl('management/crud/data_list.php'); ?>" class="block px-4 py-2 hover:bg-accent text-sm">CRUD Demo</a>
+                <a href="<?php echo $nav->getModuleUrl('management/myhealth/health_list.php'); ?>" class="block px-4 py-2 hover:bg-accent text-sm">My Health</a>
                         </div>
                     </div>
                 </div>
@@ -340,25 +340,25 @@ if (!isset($page_title)) {
                 <div>
                     <h3 class="font-medium text-sm text-muted-foreground mb-2">Learning</h3>
                     <div class="space-y-1 ml-4">
-                        <a href="/modules/learning/card/slideshow.php" class="block p-2 rounded hover:bg-accent text-sm">Card Slideshow</a>
-                        <a href="/modules/learning/card/wordcard_en.php" class="block p-2 rounded hover:bg-accent text-sm">Word Cards (EN)</a>
-                        <a href="/modules/learning/card/wordcard_ko.php" class="block p-2 rounded hover:bg-accent text-sm">Word Cards (KR)</a>
-                        <a href="/modules/learning/voca/voca.php" class="block p-2 rounded hover:bg-accent text-sm">Vocabulary</a>
+                                        <a href="<?php echo $nav->getModuleUrl('learning/card/slideshow.php'); ?>" class="block p-2 rounded hover:bg-accent text-sm">Card Slideshow</a>
+                <a href="<?php echo $nav->getModuleUrl('learning/card/wordcard_en.php'); ?>" class="block p-2 rounded hover:bg-accent text-sm">Word Cards (EN)</a>
+                <a href="<?php echo $nav->getModuleUrl('learning/card/wordcard_ko.php'); ?>" class="block p-2 rounded hover:bg-accent text-sm">Word Cards (KR)</a>
+                <a href="<?php echo $nav->getModuleUrl('learning/voca/voca.php'); ?>" class="block p-2 rounded hover:bg-accent text-sm">Vocabulary</a>
                     </div>
                 </div>
                 <div>
                     <h3 class="font-medium text-sm text-muted-foreground mb-2">Tools</h3>
                     <div class="space-y-1 ml-4">
-                        <a href="/modules/tools/news/search_news_form.php" class="block p-2 rounded hover:bg-accent text-sm">News Search</a>
-                        <a href="/modules/tools/tour/familytour.php" class="block p-2 rounded hover:bg-accent text-sm">Family Tour</a>
-                        <a href="/modules/tools/box/boxbreathe.php" class="block p-2 rounded hover:bg-accent text-sm">Box Breathing</a>
+                                        <a href="<?php echo $nav->getModuleUrl('tools/news/search_news_form.php'); ?>" class="block p-2 rounded hover:bg-accent text-sm">News Search</a>
+                <a href="<?php echo $nav->getModuleUrl('tools/tour/familytour.php'); ?>" class="block p-2 rounded hover:bg-accent text-sm">Family Tour</a>
+                <a href="<?php echo $nav->getModuleUrl('tools/box/boxbreathe.php'); ?>" class="block p-2 rounded hover:bg-accent text-sm">Box Breathing</a>
                     </div>
                 </div>
                 <div>
                     <h3 class="font-medium text-sm text-muted-foreground mb-2">Management</h3>
                     <div class="space-y-1 ml-4">
-                        <a href="/modules/management/crud/data_list.php" class="block p-2 rounded hover:bg-accent text-sm">CRUD Demo</a>
-                        <a href="/modules/management/myhealth/health_list.php" class="block p-2 rounded hover:bg-accent text-sm">My Health</a>
+                                        <a href="<?php echo $nav->getModuleUrl('management/crud/data_list.php'); ?>" class="block p-2 rounded hover:bg-accent text-sm">CRUD Demo</a>
+                <a href="<?php echo $nav->getModuleUrl('management/myhealth/health_list.php'); ?>" class="block p-2 rounded hover:bg-accent text-sm">My Health</a>
                     </div>
                 </div>
             </nav>

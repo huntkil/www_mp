@@ -51,7 +51,9 @@ class Layout {
     }
 
     private function renderStylesheets(): string {
-        return '<link href="/mp/resources/css/tailwind.output.css" rel="stylesheet">' .
+        global $nav;
+        $rootUrl = $nav ? $nav->getRootUrl() : '';
+        return '<link href="' . $rootUrl . 'resources/css/tailwind.output.css" rel="stylesheet">' .
                '<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">';
     }
 
@@ -191,9 +193,10 @@ class Layout {
         
         // Desktop Navigation
         $html .= '<div class="hidden md:flex items-center gap-6">';
-        $html .= '<a href="/modules/learning/card/slideshow.php" class="text-sm font-medium hover:text-primary transition-colors">Learning</a>';
-        $html .= '<a href="/modules/tools/news/search_news_form.php" class="text-sm font-medium hover:text-primary transition-colors">Tools</a>';
-        $html .= '<a href="/modules/management/crud/data_list.php" class="text-sm font-medium hover:text-primary transition-colors">Management</a>';
+        global $nav;
+        $html .= '<a href="' . $nav->getModuleUrl('learning/card/slideshow.php') . '" class="text-sm font-medium hover:text-primary transition-colors">Learning</a>';
+        $html .= '<a href="' . $nav->getModuleUrl('tools/news/search_news_form.php') . '" class="text-sm font-medium hover:text-primary transition-colors">Tools</a>';
+        $html .= '<a href="' . $nav->getModuleUrl('management/crud/data_list.php') . '" class="text-sm font-medium hover:text-primary transition-colors">Management</a>';
         $html .= '</div>';
         
         // Action Buttons
@@ -222,8 +225,9 @@ class Layout {
         $html .= '<p class="text-sm text-muted-foreground">&copy; ' . date('Y') . ' My Playground. All rights reserved.</p>';
         $html .= '<div class="flex items-center gap-4 text-sm text-muted-foreground">';
         $html .= '<a href="index.php" class="hover:text-foreground transition-colors">Home</a>';
-        $html .= '<a href="/modules/learning/voca/voca.php" class="hover:text-foreground transition-colors">Vocabulary</a>';
-        $html .= '<a href="/modules/learning/card/slideshow.php" class="hover:text-foreground transition-colors">Cards</a>';
+        global $nav;
+        $html .= '<a href="' . $nav->getModuleUrl('learning/voca/voca.php') . '" class="hover:text-foreground transition-colors">Vocabulary</a>';
+        $html .= '<a href="' . $nav->getModuleUrl('learning/card/slideshow.php') . '" class="hover:text-foreground transition-colors">Cards</a>';
         $html .= '</div>';
         $html .= '</div>';
         $html .= '</div>';

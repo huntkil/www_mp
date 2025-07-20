@@ -1,4 +1,6 @@
-
+---
+alwaysApply: true
+---
 # Cursor AI Project Rules - PHP/JavaScript Website Refactoring
 
 ## Project Overview
@@ -392,3 +394,4 @@ project/
 ---
 
 **Remember**: Always prioritize security, performance, and maintainability over quick fixes. Each component should be thoroughly tested before deployment.
+
