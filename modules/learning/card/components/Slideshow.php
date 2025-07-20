@@ -9,24 +9,38 @@ class Slideshow {
     }
 
     private function loadImages() {
-        // 기본 이미지들 (로컬 이미지)
+        echo "<!-- Debug: Loading images... -->";
+        
+        // 기본 이미지들 (로컬 이미지) - 절대 경로 사용
+        $imageDir = dirname(__DIR__) . '/images/';
+        echo "<!-- Debug: Image directory: " . $imageDir . " -->";
+        
         $localImages = [
-            'images/갈매기.jpeg', 'images/개.jpeg', 'images/개구리.jpeg', 'images/거북이.jpeg', 'images/거위.jpeg',
-            'images/고래.jpeg', 'images/고슴도치.jpeg', 'images/고양이.jpeg', 'images/곰.jpeg', 'images/금붕어.jpeg',
-            'images/기린.jpeg', 'images/낙타.jpeg', 'images/너구리.jpeg', 'images/다람쥐.jpeg', 'images/닭.jpeg',
-            'images/독수리.jpeg', 'images/돌고래.jpeg', 'images/돼지.jpeg', 'images/말.jpeg', 'images/뱀.jpeg',
-            'images/병아리.jpeg', 'images/부엉이.jpeg', 'images/불가사리.jpeg', 'images/사자.jpeg', 'images/상어.jpeg',
-            'images/소.jpeg', 'images/악어.jpeg', 'images/앵무새.jpeg', 'images/양.jpeg', 'images/얼룩말.jpeg',
-            'images/여우.jpeg', 'images/염소.jpeg', 'images/오리.jpeg', 'images/오징어.jpeg', 'images/원숭이.jpeg',
-            'images/참새.jpeg', 'images/침팬치.jpeg', 'images/캥거루.jpeg', 'images/코끼리.jpeg', 'images/코브라.jpeg',
-            'images/코뿔소.jpeg', 'images/코알라.jpeg', 'images/타조.jpeg', 'images/토끼.jpeg', 'images/팬더.jpeg',
-            'images/팽귄.jpeg', 'images/표범.jpeg', 'images/하마.jpeg', 'images/호랑이.jpeg'
+            $imageDir . '갈매기.jpeg', $imageDir . '개.jpeg', $imageDir . '개구리.jpeg', $imageDir . '거북이.jpeg', $imageDir . '거위.jpeg',
+            $imageDir . '고래.jpeg', $imageDir . '고슴도치.jpeg', $imageDir . '고양이.jpeg', $imageDir . '곰.jpeg', $imageDir . '금붕어.jpeg',
+            $imageDir . '기린.jpeg', $imageDir . '낙타.jpeg', $imageDir . '너구리.jpeg', $imageDir . '다람쥐.jpeg', $imageDir . '닭.jpeg',
+            $imageDir . '독수리.jpeg', $imageDir . '돌고래.jpeg', $imageDir . '돼지.jpeg', $imageDir . '말.jpeg', $imageDir . '뱀.jpeg',
+            $imageDir . '병아리.jpeg', $imageDir . '부엉이.jpeg', $imageDir . '불가사리.jpeg', $imageDir . '사자.jpeg', $imageDir . '상어.jpeg',
+            $imageDir . '소.jpeg', $imageDir . '악어.jpeg', $imageDir . '앵무새.jpeg', $imageDir . '양.jpeg', $imageDir . '얼룩말.jpeg',
+            $imageDir . '여우.jpeg', $imageDir . '염소.jpeg', $imageDir . '오리.jpeg', $imageDir . '오징어.jpeg', $imageDir . '원숭이.jpeg',
+            $imageDir . '참새.jpeg', $imageDir . '침팬치.jpeg', $imageDir . '캥거루.jpeg', $imageDir . '코끼리.jpeg', $imageDir . '코브라.jpeg',
+            $imageDir . '코뿔소.jpeg', $imageDir . '코알라.jpeg', $imageDir . '타조.jpeg', $imageDir . '토끼.jpeg', $imageDir . '팬더.jpeg',
+            $imageDir . '팽귄.jpeg', $imageDir . '표범.jpeg', $imageDir . '하마.jpeg', $imageDir . '호랑이.jpeg'
         ];
 
         // 로컬 이미지들을 실제 존재하는 것만 필터링
-        $this->images = array_filter($localImages, function($image) {
-            return file_exists($image);
+        $existingImages = array_filter($localImages, function($image) {
+            $exists = file_exists($image);
+            echo "<!-- Debug: Checking " . basename($image) . ": " . ($exists ? 'Exists' : 'Missing') . " -->";
+            return $exists;
         });
+        
+        echo "<!-- Debug: Found " . count($existingImages) . " existing local images -->";
+        
+        // 웹에서 접근 가능한 상대 경로로 변환
+        $this->images = array_map(function($image) {
+            return 'images/' . basename($image);
+        }, $existingImages);
 
         // 추가 이미지들 (Picsum Photos 사용)
         $additionalImages = [
