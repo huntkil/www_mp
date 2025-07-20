@@ -1,6 +1,16 @@
 <?php
 session_start();
-require "../../../system/includes/config.php";
+
+// Load production config if exists, otherwise development
+$config_prod = __DIR__ . '/../../../system/includes/config_production.php';
+$config_dev = __DIR__ . '/../../../system/includes/config.php';
+
+if (file_exists($config_prod)) {
+    require_once $config_prod;
+} else {
+    require_once $config_dev;
+}
+
 require_once 'controllers/MyInfoController.php';
 
 $controller = new MyInfoController();
