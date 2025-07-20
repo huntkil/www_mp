@@ -1,85 +1,69 @@
 <?php
-header('Content-Type: application/json');
+// Prevent any output before JSON
+ob_clean();
+
+// Set JSON headers
+header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: DELETE, POST, GET, OPTIONS');
+header('Access-Control-Allow-Methods: DELETE');
 header('Access-Control-Allow-Headers: Content-Type');
 
-// Handle preflight OPTIONS request
-if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') {
-    http_response_code(200);
-    exit();
+// Prevent direct access
+if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
+    http_response_code(405);
+    echo json_encode(['error' => 'Method not allowed']);
+    exit;
 }
 
 try {
-    // Load appropriate config based on environment
-    if (file_exists(__DIR__ . '/../../../system/includes/config_production.php')) {
-        require_once __DIR__ . '/../../../system/includes/config_production.php';
+    // Load production config if exists, otherwise development
+    $config_prod = __DIR__ . '/../../../system/includes/config_production.php';
+    $config_dev = __DIR__ . '/../../../system/includes/config.php';
+    
+    if (file_exists($config_prod)) {
+        require_once $config_prod;
     } else {
-        require_once __DIR__ . '/../../../system/includes/config.php';
+        require_once $config_dev;
     }
 
-    // Get ID from different sources depending on request method
-    $id = null;
+    // Get ID from URL parameter
+    $id = $_GET['id'] ?? null;
     
-    $requestMethod = $_SERVER['REQUEST_METHOD'] ?? 'GET';
-    
-    if ($requestMethod === 'DELETE') {
-        // For DELETE requests, get from URL parameters or input stream
-        $id = $_GET['id'] ?? null;
-        if (!$id) {
-            $input = file_get_contents('php://input');
-            $data = json_decode($input, true);
-            $id = $data['id'] ?? null;
-        }
-    } else if ($requestMethod === 'POST') {
-        // For POST requests (fallback)
-        $id = $_POST['id'] ?? $_GET['id'] ?? null;
-    } else {
-        // For GET requests (fallback for testing)
-        $id = $_GET['id'] ?? null;
-    }
-    
-    if (!$id) {
-        throw new Exception('ID is required');
+    if (!$id || !is_numeric($id)) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Valid ID is required']);
+        exit;
     }
 
-    // Validate ID is numeric
-    if (!is_numeric($id)) {
-        throw new Exception('Invalid ID format');
-    }
-
+    // Initialize database
     $db = Database::getInstance();
     
     // Check if vocabulary table exists
     if (!$db->tableExists('vocabulary')) {
-        throw new Exception('Vocabulary table does not exist');
-    }
-    
-    // Check if the record exists before deleting
-    $existing = $db->selectOne("SELECT id FROM vocabulary WHERE id = ?", [$id]);
-    if (!$existing) {
-        throw new Exception('Word not found');
-    }
-    
-    // Delete the record
-    $result = $db->delete("DELETE FROM vocabulary WHERE id = ?", [$id]);
-    
-    if ($result === 0) {
-        throw new Exception('Failed to delete word');
+        http_response_code(404);
+        echo json_encode(['error' => 'Vocabulary table not found']);
+        exit;
     }
 
-    echo json_encode([
-        'success' => true,
-        'message' => 'Word deleted successfully',
-        'deleted_id' => $id
-    ]);
-    
+    // Delete vocabulary
+    $sql = "DELETE FROM vocabulary WHERE id = ?";
+    $affected = $db->delete($sql, [$id]);
+
+    if ($affected > 0) {
+        echo json_encode([
+            'success' => true,
+            'message' => 'Vocabulary deleted successfully'
+        ]);
+    } else {
+        http_response_code(404);
+        echo json_encode(['error' => 'Vocabulary not found']);
+    }
+
 } catch (Exception $e) {
-    error_log("Vocabulary delete error: " . $e->getMessage());
     http_response_code(500);
     echo json_encode([
-        'error' => 'Failed to delete word',
-        'message' => IS_LOCAL ? $e->getMessage() : 'Please try again later'
+        'error' => 'Database error occurred',
+        'message' => 'Please try again later'
     ]);
 }
 ?> 
