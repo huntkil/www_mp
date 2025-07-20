@@ -16,25 +16,41 @@ class MyInfoController {
     private $db;
 
     public function __construct() {
-        $this->db = Database::getInstance();
-        $this->model = new MyInfo($this->db);
+        try {
+            $this->db = Database::getInstance();
+            $this->model = new MyInfo($this->db);
+        } catch (Exception $e) {
+            error_log("MyInfoController constructor error: " . $e->getMessage());
+            throw $e;
+        }
     }
 
     public function index() {
-        $page = $_GET['page'] ?? 1;
-        $perPage = 10;
-        $offset = ($page - 1) * $perPage;
+        try {
+            $page = $_GET['page'] ?? 1;
+            $perPage = 10;
+            $offset = ($page - 1) * $perPage;
 
-        $data = $this->model->getAll($offset, $perPage);
-        $total = $this->model->getTotal();
-        $totalPages = ceil($total / $perPage);
+            $data = $this->model->getAll($offset, $perPage);
+            $total = $this->model->getTotal();
+            $totalPages = ceil($total / $perPage);
 
-        return [
-            'success' => true,
-            'data' => $data,
-            'current_page' => (int)$page,
-            'total_pages' => $totalPages
-        ];
+            return [
+                'success' => true,
+                'data' => $data,
+                'current_page' => (int)$page,
+                'total_pages' => $totalPages
+            ];
+        } catch (Exception $e) {
+            error_log("MyInfoController index error: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Failed to load data: ' . $e->getMessage(),
+                'data' => [],
+                'current_page' => 1,
+                'total_pages' => 1
+            ];
+        }
     }
 
     public function create($data) {

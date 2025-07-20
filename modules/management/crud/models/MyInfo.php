@@ -14,13 +14,25 @@ class MyInfo extends Model {
     ];
 
     public function getAll($offset = 0, $limit = 10) {
-        $sql = "SELECT * FROM {$this->table} ORDER BY no DESC LIMIT ? OFFSET ?";
-        return $this->db->query($sql, [$limit, $offset])->fetchAll();
+        try {
+            $sql = "SELECT * FROM {$this->table} ORDER BY no DESC LIMIT ? OFFSET ?";
+            $result = $this->db->query($sql, [$limit, $offset]);
+            return $result ? $result->fetchAll() : [];
+        } catch (Exception $e) {
+            error_log("MyInfo getAll error: " . $e->getMessage());
+            return [];
+        }
     }
 
     public function getTotal() {
-        $sql = "SELECT COUNT(*) as total FROM {$this->table}";
-        return $this->db->query($sql)->fetch()['total'];
+        try {
+            $sql = "SELECT COUNT(*) as total FROM {$this->table}";
+            $result = $this->db->query($sql);
+            return $result ? $result->fetch()['total'] : 0;
+        } catch (Exception $e) {
+            error_log("MyInfo getTotal error: " . $e->getMessage());
+            return 0;
+        }
     }
 
     public function getById($id) {

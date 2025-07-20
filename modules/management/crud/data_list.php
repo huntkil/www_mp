@@ -2,6 +2,10 @@
 session_start();
 $page_title = "Data List";
 
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 // Load production config if exists, otherwise development
 $config_prod = __DIR__ . '/../../../system/includes/config_production.php';
 $config_dev = __DIR__ . '/../../../system/includes/config.php';
