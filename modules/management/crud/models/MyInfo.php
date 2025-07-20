@@ -16,8 +16,9 @@ class MyInfo extends Model {
     public function getAll($offset = 0, $limit = 10) {
         try {
             $sql = "SELECT * FROM {$this->table} ORDER BY no DESC LIMIT ? OFFSET ?";
-            $result = $this->db->query($sql, [$limit, $offset]);
-            return $result ? $result->fetchAll() : [];
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([$limit, $offset]);
+            return $stmt->fetchAll();
         } catch (Exception $e) {
             error_log("MyInfo getAll error: " . $e->getMessage());
             return [];
@@ -27,8 +28,9 @@ class MyInfo extends Model {
     public function getTotal() {
         try {
             $sql = "SELECT COUNT(*) as total FROM {$this->table}";
-            $result = $this->db->query($sql);
-            return $result ? $result->fetch()['total'] : 0;
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetch()['total'];
         } catch (Exception $e) {
             error_log("MyInfo getTotal error: " . $e->getMessage());
             return 0;
@@ -36,8 +38,15 @@ class MyInfo extends Model {
     }
 
     public function getById($id) {
-        $sql = "SELECT * FROM {$this->table} WHERE no = ?";
-        return $this->db->query($sql, [$id])->fetch();
+        try {
+            $sql = "SELECT * FROM {$this->table} WHERE no = ?";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([$id]);
+            return $stmt->fetch();
+        } catch (Exception $e) {
+            error_log("MyInfo getById error: " . $e->getMessage());
+            return null;
+        }
     }
 
     public function create($data) {
@@ -51,7 +60,8 @@ class MyInfo extends Model {
             }
 
             $sql = "INSERT INTO {$this->table} (name, email, phone, age, birthday, height, weight) VALUES (?, ?, ?, ?, ?, ?, ?)";
-            $this->db->query($sql, [
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([
                 $data['name'],
                 $data['email'],
                 $data['phone'],
@@ -81,7 +91,8 @@ class MyInfo extends Model {
             }
 
             $sql = "UPDATE {$this->table} SET name = ?, email = ?, phone = ?, age = ?, birthday = ?, height = ?, weight = ? WHERE no = ?";
-            $this->db->query($sql, [
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([
                 $data['name'],
                 $data['email'],
                 $data['phone'],
@@ -104,7 +115,8 @@ class MyInfo extends Model {
     public function delete($id) {
         try {
             $sql = "DELETE FROM {$this->table} WHERE no = ?";
-            $this->db->query($sql, [$id]);
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([$id]);
             return ['success' => true];
         } catch (Exception $e) {
             return [
