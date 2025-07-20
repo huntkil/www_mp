@@ -27,12 +27,23 @@ class MyInfoController {
             $this->model = new MyInfo($this->db);
         } catch (Exception $e) {
             error_log("MyInfoController constructor error: " . $e->getMessage());
-            throw $e;
+            // Return error instead of throwing
+            return;
         }
     }
 
     public function index() {
         try {
+            if (!$this->model) {
+                return [
+                    'success' => false,
+                    'message' => 'Model not initialized',
+                    'data' => [],
+                    'current_page' => 1,
+                    'total_pages' => 1
+                ];
+            }
+            
             $page = $_GET['page'] ?? 1;
             $perPage = 10;
             $offset = ($page - 1) * $perPage;

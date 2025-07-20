@@ -19,24 +19,20 @@ if (file_exists($config_prod)) {
 require "../../../system/includes/header.php";
 require_once 'controllers/MyInfoController.php';
 
-// Simple test without controller
+// Use controller with error handling
 try {
-    // Direct database query
-    $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET;
-    $pdo = new PDO($dsn, DB_USER, DB_PASS, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        PDO::ATTR_EMULATE_PREPARES => false
-    ]);
+    $controller = new MyInfoController();
+    $result = $controller->index();
     
-    $sql = "SELECT * FROM myinfo ORDER BY no DESC LIMIT 10";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
-    $items = $stmt->fetchAll();
-    
-    $current_page = 1;
-    $total_pages = 1;
-    
+    if ($result && $result['success']) {
+        $items = $result['data'];
+        $current_page = $result['current_page'];
+        $total_pages = $result['total_pages'];
+    } else {
+        $items = [];
+        $current_page = 1;
+        $total_pages = 1;
+    }
 } catch (Exception $e) {
     echo "Error: " . $e->getMessage();
     $items = [];
