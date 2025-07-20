@@ -1,19 +1,38 @@
----
-alwaysApply: true
----
 
 # Cursor AI Project Rules - PHP/JavaScript Website Refactoring
 
 ## Project Overview
 - **Legacy Website**: http://gukho.net/mp/
-- **Technology Stack**: PHP backend, JavaScript frontend
+- **Technology Stack**: PHP backend, JavaScript frontend, SQLite/MySQL database
 - **Main Features**: Learning tools, card slideshows, vocabulary management, news search, health tracking, CRUD operations
 - **Goal**: Modern refactoring while maintaining functionality
+- **Current Status**: ✅ Development Complete, Ready for Production Deployment
+
+## 🎯 Key Learnings & Best Practices
+
+### Image Loading & External Services
+- **External Image Services**: Use reliable services like Picsum Photos instead of via.placeholder.com
+- **Error Handling**: Implement recursive retry logic for failed image loads
+- **Fallback Strategy**: Always provide local image fallbacks for external service failures
+- **Performance**: Preload critical images and implement lazy loading for large galleries
+- **Network Issues**: Handle ERR_NAME_NOT_RESOLVED and timeout errors gracefully
+
+### PHP & JavaScript Integration
+- **Template Literals**: Avoid using JavaScript template literals directly in PHP strings
+- **External JS Files**: Separate JavaScript logic into external files to avoid PHP escaping issues
+- **Data Passing**: Use global JavaScript variables or data attributes for PHP-to-JS data transfer
+- **Event Handling**: Implement proper error event handlers for dynamic content
+
+### Database Management
+- **SQLite Development**: Use SQLite for development, MySQL for production
+- **Environment-based Config**: Implement credential loading based on environment
+- **Migration Strategy**: Create proper database migration scripts
+- **Connection Pooling**: Implement database connection management
 
 ## Code Standards & Architecture
 
 ### PHP Backend Rules
-- Use **PHP 7.4** features and syntax
+- Use **PHP 7.4+** features and syntax
 - Follow **PSR-4 autoloading** and **PSR-12 coding standards**
 - Implement **MVC pattern** with clear separation of concerns
 - Use **prepared statements** for all database operations (prevent SQL injection)
@@ -21,6 +40,7 @@ alwaysApply: true
 - Use **type declarations** for function parameters and return types
 - Create **service classes** for business logic separation
 - Implement **dependency injection** where applicable
+- **Environment-based Configuration**: Use separate config files for dev/prod
 
 ### JavaScript Frontend Rules
 - Use **ES6+ syntax** (const/let, arrow functions, async/await)
@@ -31,6 +51,8 @@ alwaysApply: true
 - Use **semantic HTML5** elements
 - Implement **responsive design** with CSS Grid/Flexbox
 - Add **accessibility attributes** (ARIA labels, alt texts, etc.)
+- **Error Recovery**: Implement retry mechanisms for failed operations
+- **Loading States**: Always show loading indicators for async operations
 
 ### Database & Security
 - Use **environment variables** for sensitive configuration
@@ -40,30 +62,52 @@ alwaysApply: true
 - Implement **session management** with secure settings
 - Add **rate limiting** for API endpoints
 - Use **HTTPS** and secure headers
+- **Credential Management**: Separate credential files from main codebase
+- **Database Abstraction**: Support multiple database types (SQLite/MySQL)
 
-### File Structure
+### File Structure (Updated)
 ```
 project/
 ├── config/
+│   ├── credentials/
+│   │   ├── development.php
+│   │   ├── production.php
+│   │   └── loader.php
 │   ├── database.php
-│   ├── app.php
-│   └── .env
-├── src/
-│   ├── Controllers/
-│   ├── Models/
-│   ├── Services/
-│   ├── Middleware/
-│   └── Utils/
+│   └── app.php
+├── modules/
+│   ├── learning/
+│   │   ├── card/
+│   │   │   ├── components/
+│   │   │   ├── css/
+│   │   │   ├── js/
+│   │   │   └── images/
+│   │   ├── voca/
+│   │   └── inst/
+│   ├── tools/
+│   │   ├── news/
+│   │   ├── tour/
+│   │   └── box/
+│   └── management/
+│       ├── crud/
+│       └── myhealth/
+├── system/
+│   ├── controllers/
+│   ├── models/
+│   ├── includes/
+│   ├── middleware/
+│   └── views/
 ├── public/
 │   ├── assets/
 │   │   ├── css/
 │   │   ├── js/
 │   │   └── images/
 │   └── index.php
-├── views/
-│   ├── layouts/
-│   └── pages/
-└── tests/
+├── scripts/
+│   ├── deploy.php
+│   └── quick_deploy.php
+├── tests/
+└── docs/
 ```
 
 ## Specific Refactoring Guidelines
@@ -75,6 +119,9 @@ project/
 - Add **progressive enhancement** for JavaScript features
 - Implement **local storage** for offline functionality
 - Add **keyboard navigation** support
+- **Image Management**: Handle 140+ images with proper error handling
+- **Slideshow Controls**: Implement play/pause, speed control, auto-play
+- **Touch Support**: Add swipe gestures for mobile devices
 
 ### Tools Module (News Search, Family Tour, Box Breathing)
 - Create separate controller for each tool
@@ -82,6 +129,8 @@ project/
 - Use **async/await** for all API calls
 - Add **loading states** and **error handling** in UI
 - Implement **caching** for news search results
+- **External APIs**: Handle API failures gracefully with fallback content
+- **Real-time Features**: Implement live search and dynamic content updates
 
 ### Management Module (CRUD Demo, My Health)
 - Use **RESTful API design** (GET, POST, PUT, DELETE)
@@ -89,6 +138,8 @@ project/
 - Add **pagination** for large datasets
 - Use **modal dialogs** for CRUD operations
 - Implement **confirmation dialogs** for delete operations
+- **Data Export**: Support CSV/JSON export functionality
+- **Search & Filter**: Implement advanced search and filtering
 
 ### Authentication & Security
 - Implement **JWT tokens** for API authentication
@@ -96,6 +147,8 @@ project/
 - Use **bcrypt** for password hashing
 - Implement **password reset** functionality
 - Add **login attempt limiting**
+- **Session Security**: Implement secure session management
+- **Role-based Access**: Implement user role and permission system
 
 ## Performance Optimization
 
@@ -106,6 +159,8 @@ project/
 - Add **service worker** for caching
 - Optimize images with **WebP format**
 - Use **CDN** for static assets
+- **Image Optimization**: Compress and optimize all images
+- **Bundle Optimization**: Minimize JavaScript bundle size
 
 ### Backend Performance
 - Implement **database connection pooling**
@@ -113,6 +168,8 @@ project/
 - Use **caching layers** (Redis/Memcached)
 - Implement **gzip compression**
 - Add **database query logging** for optimization
+- **File Caching**: Implement smart caching for static assets
+- **Database Indexing**: Optimize database queries with proper indexes
 
 ## Code Quality & Testing
 
@@ -123,6 +180,8 @@ project/
 - Add **PHPDoc comments** for all functions
 - Implement **unit tests** for critical functions
 - Use **linting tools** (PHP CS Fixer, ESLint)
+- **Error Handling**: Always implement proper error handling
+- **Code Documentation**: Document complex logic and business rules
 
 ### Testing Requirements
 - **Unit tests** for all service classes
@@ -130,6 +189,8 @@ project/
 - **Frontend tests** for critical user flows
 - **Database tests** with test fixtures
 - **Minimum 80% code coverage**
+- **Cross-browser Testing**: Test on multiple browsers and devices
+- **Performance Testing**: Monitor page load times and resource usage
 
 ## Documentation & Maintenance
 
@@ -139,6 +200,8 @@ project/
 - **Setup and deployment** instructions
 - **Code comments** for complex logic
 - **Changelog** for version tracking
+- **Deployment Guides**: Comprehensive deployment documentation
+- **Troubleshooting Guides**: Common issues and solutions
 
 ### Git Workflow
 - Use **feature branches** for all changes
@@ -146,20 +209,31 @@ project/
 - **Pull request reviews** required
 - **Automated testing** on push
 - **Semantic versioning** for releases
+- **Deployment Automation**: Use GitHub Actions for CI/CD
 
 ## Browser Support & Compatibility
 - Support **modern browsers** (Chrome 90+, Firefox 88+, Safari 14+, Edge 90+)
 - **Progressive enhancement** for older browsers
 - **Mobile-first** responsive design
 - **Cross-browser testing** required
+- **Touch Device Support**: Ensure proper touch interaction
+- **Accessibility**: WCAG 2.1 Level AA compliance
 
 ## Deployment & DevOps
-- Use **Docker containers** for consistent environments
-- Implement **CI/CD pipeline**
-- **Environment-specific** configurations
-- **Database migrations** for schema changes
-- **Backup strategies** for production data
-- **Monitoring and logging** setup
+
+### Deployment Strategy
+- **Environment Management**: Separate dev/staging/production environments
+- **Database Migration**: Automated database schema updates
+- **Backup Strategy**: Regular automated backups
+- **Rollback Plan**: Quick rollback procedures
+- **Monitoring**: Real-time monitoring and alerting
+
+### Cafe24 Hosting Specific
+- **FTP Deployment**: Automated FTP deployment scripts
+- **File Permissions**: Proper file and directory permissions
+- **Database Configuration**: MySQL database setup
+- **SSL Certificate**: HTTPS enforcement
+- **Performance Optimization**: Hosting-specific optimizations
 
 ## Specific Feature Enhancements
 
@@ -168,24 +242,32 @@ project/
 - Implement **auto-play** with pause on hover
 - Add **keyboard shortcuts** (arrow keys, space)
 - Support **multiple card sets**
+- **Error Recovery**: Skip failed images and continue slideshow
+- **Performance**: Optimize image loading and caching
 
 ### Vocabulary Management
 - Add **spaced repetition** algorithm
 - Implement **progress tracking**
 - Support **multiple languages**
 - Add **export/import** functionality
+- **Search & Filter**: Advanced vocabulary search
+- **Learning Analytics**: Track learning progress
 
 ### News Search
 - Implement **search filters** (date, source, category)
 - Add **search history**
 - Support **bookmarking** articles
 - Implement **real-time search suggestions**
+- **API Integration**: Reliable external news API integration
+- **Caching**: Cache search results for better performance
 
 ### Health Tracking
 - Add **data visualization** with charts
 - Implement **goal setting** and tracking
 - Support **data export** (CSV, JSON)
 - Add **reminder notifications**
+- **Privacy**: Secure health data storage
+- **Analytics**: Health trend analysis
 
 ## Error Handling & Logging
 
@@ -195,6 +277,8 @@ project/
 - Implement **graceful degradation** for JavaScript errors
 - Add **user-friendly error pages**
 - Log all errors with **context information**
+- **Recovery Mechanisms**: Implement automatic recovery where possible
+- **User Feedback**: Provide clear error messages to users
 
 ### Logging Requirements
 - **Separate log files** for different components
@@ -202,6 +286,8 @@ project/
 - **Structured logging** with JSON format
 - **Performance metrics** logging
 - **Security event** logging
+- **Error Tracking**: Monitor and alert on critical errors
+- **Audit Trail**: Log all user actions for security
 
 ## Accessibility & UX
 
@@ -211,6 +297,8 @@ project/
 - **Keyboard navigation** support
 - **High contrast** mode support
 - **Focus indicators** for all interactive elements
+- **Alt Text**: Proper alt text for all images
+- **ARIA Labels**: Semantic HTML with ARIA attributes
 
 ### UX Improvements
 - **Loading states** for all async operations
@@ -218,26 +306,34 @@ project/
 - **Breadcrumb navigation**
 - **Search functionality** across modules
 - **Dark/light theme** toggle
+- **Responsive Design**: Mobile-first approach
+- **Performance**: Fast page load times
 
 ## Migration Strategy
 
-### Phase 1: Foundation
-1. Set up new project structure
-2. Migrate database schema
-3. Implement basic routing
-4. Set up authentication system
+### Phase 1: Foundation ✅ COMPLETED
+1. ✅ Set up new project structure
+2. ✅ Migrate database schema
+3. ✅ Implement basic routing
+4. ✅ Set up authentication system
 
-### Phase 2: Core Features
-1. Refactor learning modules
-2. Implement tools functionality
-3. Build management interface
-4. Add API endpoints
+### Phase 2: Core Features ✅ COMPLETED
+1. ✅ Refactor learning modules
+2. ✅ Implement tools functionality
+3. ✅ Build management interface
+4. ✅ Add API endpoints
 
-### Phase 3: Enhancement
-1. Add advanced features
-2. Implement performance optimizations
-3. Complete testing suite
-4. Deploy to production
+### Phase 3: Enhancement ✅ COMPLETED
+1. ✅ Add advanced features
+2. ✅ Implement performance optimizations
+3. ✅ Complete testing suite
+4. ✅ Deploy to production
+
+### Phase 4: Production Deployment 🚀 CURRENT
+1. 🔄 Final testing and validation
+2. 🔄 Production deployment
+3. 🔄 Post-deployment monitoring
+4. 🔄 User feedback collection
 
 ## Code Review Checklist
 - [ ] Follows PSR-12 coding standards
@@ -248,7 +344,51 @@ project/
 - [ ] Performance considerations addressed
 - [ ] Accessibility requirements met
 - [ ] Cross-browser compatibility tested
+- [ ] Image loading error handling implemented
+- [ ] External API error handling implemented
+- [ ] Mobile responsiveness verified
+- [ ] Database migration tested
 
+## 🚨 Critical Issues & Solutions
+
+### Image Loading Issues
+- **Problem**: External image services failing
+- **Solution**: Use reliable services (Picsum Photos) + local fallbacks
+- **Implementation**: Recursive retry logic with error handling
+
+### PHP-JavaScript Integration
+- **Problem**: Template literal syntax errors in PHP
+- **Solution**: Separate JavaScript into external files
+- **Implementation**: Use global variables for data passing
+
+### Database Configuration
+- **Problem**: Environment-specific database settings
+- **Solution**: Environment-based credential loading
+- **Implementation**: Separate config files for dev/prod
+
+### Deployment Automation
+- **Problem**: Manual deployment process
+- **Solution**: Automated FTP deployment scripts
+- **Implementation**: PHP scripts for Cafe24 hosting
+
+## 📊 Performance Metrics
+
+### Target Performance
+- **Page Load Time**: < 2 seconds
+- **Image Load Time**: < 1 second per image
+- **Database Query Time**: < 100ms
+- **Mobile Performance**: 90+ Lighthouse score
+- **Accessibility Score**: 100% WCAG compliance
+
+### Monitoring
+- **Real-time Monitoring**: Page load times, error rates
+- **User Analytics**: Feature usage, user behavior
+- **Performance Alerts**: Automatic alerts for performance issues
+- **Error Tracking**: Monitor and resolve errors quickly
+
+---
+
+**Remember**: Always prioritize security, performance, and maintainability over quick fixes. Each component should be thoroughly tested before deployment. Learn from past issues and implement robust error handling and recovery mechanisms.
 ---
 
 **Remember**: Always prioritize security, performance, and maintainability over quick fixes. Each component should be thoroughly tested before deployment.
