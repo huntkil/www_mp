@@ -16,11 +16,11 @@ define('CREDENTIALS_NEWS_API_KEY', 'your_news_api_key_here');
 define('CREDENTIALS_OPENAI_API_KEY', 'your_openai_api_key_here');
 
 // Database Credentials
-define('CREDENTIALS_DB_TYPE', 'sqlite'); // 'sqlite' or 'mysql'
+define('CREDENTIALS_DB_TYPE', 'mysql'); // 'sqlite' or 'mysql'
 define('CREDENTIALS_DB_HOST', 'localhost');
-define('CREDENTIALS_DB_USER', 'your_username');
-define('CREDENTIALS_DB_PASS', 'your_password');
-define('CREDENTIALS_DB_NAME', 'your_database_name');
+define('CREDENTIALS_DB_USER', 'huntkil');
+define('CREDENTIALS_DB_PASS', 'kil7310k4!');
+define('CREDENTIALS_DB_NAME', 'huntkil');
 define('CREDENTIALS_DB_FILE', __DIR__ . '/../database.sqlite');
 
 // Default Admin Credentials

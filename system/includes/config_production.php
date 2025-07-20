@@ -10,12 +10,16 @@ define('CONFIG_LOADED', true);
 $serverName = $_SERVER['SERVER_NAME'] ?? '';
 $isLocal = false; // Always false for production
 
-// Database Configuration for cafe24
-define('DB_TYPE', 'mysql');
-define('DB_HOST', 'localhost');
-define('DB_USER', 'huntkil');
-define('DB_PASS', 'kil7310k4!');
-define('DB_NAME', 'huntkil');
+// Load production credentials
+require_once __DIR__ . '/../../config/credentials/production.php';
+
+// Database Configuration from credentials
+define('DB_TYPE', CREDENTIALS_DB_TYPE);
+define('DB_HOST', CREDENTIALS_DB_HOST);
+define('DB_USER', CREDENTIALS_DB_USER);
+define('DB_PASS', CREDENTIALS_DB_PASS);
+define('DB_NAME', CREDENTIALS_DB_NAME);
+define('DB_FILE', CREDENTIALS_DB_FILE);
 
 // Application URL
 define('APP_URL', 'https://gukho.net/mp');
