@@ -1,5 +1,10 @@
 <?php
-require_once '../../system/includes/config.php';
+// Load appropriate config based on environment
+if (file_exists(__DIR__ . '/../../system/includes/config_production.php')) {
+    require_once __DIR__ . '/../../system/includes/config_production.php';
+} else {
+    require_once __DIR__ . '/../../system/includes/config.php';
+}
 $page_title = "Tools";
 require_once '../../system/includes/header.php';
 ?>
