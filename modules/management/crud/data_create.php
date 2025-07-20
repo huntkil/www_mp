@@ -1,5 +1,12 @@
 <?php
 session_start();
+$page_title = "Create New Record";
+
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+echo "<!-- Debug: Starting data_create.php -->";
 
 // Load production config if exists, otherwise development
 $config_prod = __DIR__ . '/../../../system/includes/config_production.php';
@@ -7,32 +14,73 @@ $config_dev = __DIR__ . '/../../../system/includes/config.php';
 
 if (file_exists($config_prod)) {
     require_once $config_prod;
+    echo "<!-- Debug: Production config loaded -->";
 } else {
     require_once $config_dev;
+    echo "<!-- Debug: Development config loaded -->";
 }
 
-require_once 'controllers/MyInfoController.php';
+echo "<!-- Debug: About to include header -->";
+require "../../../system/includes/header.php";
+echo "<!-- Debug: Header included -->";
 
-$controller = new MyInfoController();
 $errors = [];
 $data = [];
 
 // Handle POST request before any output
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $data = Utils::sanitize($_POST);
-    $result = $controller->create($data);
+    echo "<!-- Debug: Processing POST request -->";
     
-    if ($result['success']) {
-        Utils::setFlashMessage('success', $result['message']);
-        Utils::redirect('data_list.php');
-    } else {
-        $errors = $result['errors'] ?? [$result['message'] ?? 'An error occurred'];
-        $data = $result['data'] ?? $data;
+    // Simple data sanitization
+    $data = array_map('trim', $_POST);
+    $data = array_map('htmlspecialchars', $data);
+    
+    // Validate required fields
+    $errors = [];
+    if (empty($data['name'])) {
+        $errors[] = 'Name is required';
+    }
+    if (empty($data['email'])) {
+        $errors[] = 'Email is required';
+    }
+    if (empty($data['phone'])) {
+        $errors[] = 'Phone is required';
+    }
+    
+    if (empty($errors)) {
+        try {
+            // Direct database insertion
+            $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET;
+            $pdo = new PDO($dsn, DB_USER, DB_PASS, [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_EMULATE_PREPARES => false
+            ]);
+            
+            $sql = "INSERT INTO myinfo (name, email, phone, age, birthday, height, weight) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([
+                $data['name'],
+                $data['email'],
+                $data['phone'],
+                $data['age'] ?: null,
+                $data['birthday'] ?: null,
+                $data['height'] ?: null,
+                $data['weight'] ?: null
+            ]);
+            
+            echo "<!-- Debug: Record created successfully -->";
+            $_SESSION['flash_message'] = 'Record created successfully';
+            $_SESSION['flash_type'] = 'success';
+            header('Location: data_list.php');
+            exit;
+            
+        } catch (Exception $e) {
+            echo "<!-- Debug: Error creating record: " . $e->getMessage() . " -->";
+            $errors[] = 'Failed to create record: ' . $e->getMessage();
+        }
     }
 }
-
-$page_title = "Create New Record";
-require "../../../system/includes/header.php";
 ?>
 
 <div class="container mx-auto px-4 py-8">
