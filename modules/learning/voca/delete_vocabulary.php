@@ -35,19 +35,29 @@ try {
         exit;
     }
 
-    // Initialize database
-    $db = Database::getInstance();
+    // Direct PDO connection for API
+    $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET;
+    $pdo = new PDO($dsn, DB_USER, DB_PASS, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES => false
+    ]);
     
     // Check if vocabulary table exists
-    if (!$db->tableExists('vocabulary')) {
+    $stmt = $pdo->prepare("SHOW TABLES LIKE ?");
+    $stmt->execute(['vocabulary']);
+    $tableExists = $stmt->rowCount() > 0;
+    
+    if (!$tableExists) {
         http_response_code(404);
         echo json_encode(['error' => 'Vocabulary table not found']);
         exit;
     }
 
     // Delete vocabulary
-    $sql = "DELETE FROM vocabulary WHERE id = ?";
-    $affected = $db->delete($sql, [$id]);
+    $stmt = $pdo->prepare("DELETE FROM vocabulary WHERE id = ?");
+    $stmt->execute([$id]);
+    $affected = $stmt->rowCount();
 
     if ($affected > 0) {
         echo json_encode([

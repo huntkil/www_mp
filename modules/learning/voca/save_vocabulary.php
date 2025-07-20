@@ -46,11 +46,20 @@ try {
         exit;
     }
 
-    // Initialize database
-    $db = Database::getInstance();
+    // Direct PDO connection for API
+    $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET;
+    $pdo = new PDO($dsn, DB_USER, DB_PASS, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES => false
+    ]);
     
     // Check if vocabulary table exists
-    if (!$db->tableExists('vocabulary')) {
+    $stmt = $pdo->prepare("SHOW TABLES LIKE ?");
+    $stmt->execute(['vocabulary']);
+    $tableExists = $stmt->rowCount() > 0;
+    
+    if (!$tableExists) {
         // Create vocabulary table
         $createTableSQL = "
         CREATE TABLE IF NOT EXISTS vocabulary (
@@ -63,12 +72,13 @@ try {
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
         ";
         
-        $db->query($createTableSQL);
+        $pdo->exec($createTableSQL);
     }
 
     // Insert new vocabulary
-    $sql = "INSERT INTO vocabulary (word, meaning, example) VALUES (?, ?, ?)";
-    $id = $db->insert($sql, [$word, $meaning, $example]);
+    $stmt = $pdo->prepare("INSERT INTO vocabulary (word, meaning, example) VALUES (?, ?, ?)");
+    $stmt->execute([$word, $meaning, $example]);
+    $id = $pdo->lastInsertId();
 
     echo json_encode([
         'success' => true,

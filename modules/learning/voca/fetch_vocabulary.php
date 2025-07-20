@@ -26,11 +26,20 @@ try {
         require_once $config_dev;
     }
 
-    // Initialize database
-    $db = Database::getInstance();
+    // Direct PDO connection for API
+    $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET;
+    $pdo = new PDO($dsn, DB_USER, DB_PASS, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES => false
+    ]);
     
     // Check if vocabulary table exists
-    if (!$db->tableExists('vocabulary')) {
+    $stmt = $pdo->prepare("SHOW TABLES LIKE ?");
+    $stmt->execute(['vocabulary']);
+    $tableExists = $stmt->rowCount() > 0;
+    
+    if (!$tableExists) {
         // Create vocabulary table
         $createTableSQL = "
         CREATE TABLE IF NOT EXISTS vocabulary (
@@ -43,7 +52,7 @@ try {
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
         ";
         
-        $db->query($createTableSQL);
+        $pdo->exec($createTableSQL);
         
         // Return empty array for new table
         echo json_encode(['success' => true, 'data' => []]);
@@ -51,8 +60,9 @@ try {
     }
     
     // Fetch all vocabulary
-    $sql = "SELECT * FROM vocabulary ORDER BY id DESC";
-    $words = $db->select($sql);
+    $stmt = $pdo->prepare("SELECT * FROM vocabulary ORDER BY id DESC");
+    $stmt->execute();
+    $words = $stmt->fetchAll();
     
     echo json_encode(['success' => true, 'data' => $words]);
     
