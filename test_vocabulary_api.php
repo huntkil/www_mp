@@ -44,8 +44,8 @@ try {
     echo "Direct PDO connection: SUCCESS<br>";
     
     // Test table existence
-    $stmt = $pdo->prepare("SHOW TABLES LIKE ?");
-    $stmt->execute(['vocabulary']);
+    $stmt = $pdo->prepare("SHOW TABLES LIKE 'vocabulary'");
+    $stmt->execute();
     $tableExists = $stmt->rowCount() > 0;
     
     if ($tableExists) {
