@@ -108,7 +108,18 @@ class Database {
             $stmt->execute($params);
             return $stmt;
         } catch (PDOException $e) {
-            ErrorHandler::handleDatabaseError($e, $sql);
+            // API 컨텍스트에서는 예외를 던지고, 일반 페이지에서는 ErrorHandler 사용
+            $isApiRequest = strpos($_SERVER['REQUEST_URI'] ?? '', '/api/') !== false || 
+                           strpos($_SERVER['REQUEST_URI'] ?? '', 'fetch_vocabulary.php') !== false ||
+                           strpos($_SERVER['REQUEST_URI'] ?? '', 'save_vocabulary.php') !== false ||
+                           strpos($_SERVER['REQUEST_URI'] ?? '', 'delete_vocabulary.php') !== false ||
+                           strpos($_SERVER['REQUEST_URI'] ?? '', 'update_vocabulary.php') !== false;
+            
+            if ($isApiRequest) {
+                throw new Exception("Database error: " . $e->getMessage());
+            } else {
+                ErrorHandler::handleDatabaseError($e, $sql);
+            }
         }
     }
     
