@@ -1,6 +1,6 @@
 <?php
 
-class MyInfo extends Model {
+class MyInfo {
     protected $table = 'myinfo';
     protected $primaryKey = 'no';
     protected $fillable = [
@@ -12,6 +12,11 @@ class MyInfo extends Model {
         'height',
         'weight'
     ];
+    protected $db;
+    
+    public function __construct($db) {
+        $this->db = $db;
+    }
 
     public function getAll($offset = 0, $limit = 10) {
         try {
