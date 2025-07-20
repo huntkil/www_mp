@@ -4,8 +4,8 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Production config 사용
-require_once '../includes/config_production.php';
+// Config 사용
+require_once __DIR__ . '/../includes/config.php';
 
 // 중복 로그인 방지
 if (isset($_SESSION['id'])) {

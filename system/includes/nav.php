@@ -29,11 +29,11 @@ $currentUser = $isLoggedIn ? $auth->getCurrentUser() : null;
                    class="text-sm font-medium <?php echo $current_page === 'index.php' ? 'text-indigo-600' : 'text-gray-600 hover:text-indigo-600'; ?> transition-colors">
                     홈
                 </a>
-                <a href="<?php echo $nav->getModuleUrl('learning/card/slideshow.php'); ?>" 
+                <a href="/modules/learning/card/slideshow.php" 
                    class="text-sm font-medium <?php echo strpos($current_page, 'slideshow') !== false ? 'text-indigo-600' : 'text-gray-600 hover:text-indigo-600'; ?> transition-colors">
                     학습
                 </a>
-                <a href="<?php echo $nav->getModuleUrl('management/crud/data_list.php'); ?>" 
+                <a href="/modules/management/crud/data_list.php" 
                    class="text-sm font-medium <?php echo strpos($current_page, 'crud') !== false ? 'text-indigo-600' : 'text-gray-600 hover:text-indigo-600'; ?> transition-colors">
                     관리
                 </a>
@@ -84,8 +84,8 @@ $currentUser = $isLoggedIn ? $auth->getCurrentUser() : null;
         <!-- Mobile menu -->
         <div id="mobile-menu" class="hidden md:hidden py-4 space-y-4 border-t">
             <a href="<?php echo $nav->getHomeUrl(); ?>" class="block text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">홈</a>
-            <a href="<?php echo $nav->getModuleUrl('learning/card/slideshow.php'); ?>" class="block text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">학습</a>
-            <a href="<?php echo $nav->getModuleUrl('management/crud/data_list.php'); ?>" class="block text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">관리</a>
+            <a href="/modules/learning/card/slideshow.php" class="block text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">학습</a>
+            <a href="/modules/management/crud/data_list.php" class="block text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">관리</a>
             
             <?php if($isLoggedIn && $currentUser): ?>
                 <hr class="border-gray-200">

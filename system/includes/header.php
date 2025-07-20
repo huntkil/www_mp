@@ -18,14 +18,15 @@ class NavigationHelper {
     }
     
     private function __construct() {
-        $this->currentPath = $_SERVER['REQUEST_URI'];
+        $this->currentPath = $_SERVER['REQUEST_URI'] ?? '/';
         $this->rootPath = $this->calculateRootPath();
     }
     
     private function calculateRootPath() {
-        $scriptName = $_SERVER['SCRIPT_NAME'];
+        $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
         $pathInfo = pathinfo($scriptName);
         $depth = substr_count($pathInfo['dirname'], '/') - 1;
+        $depth = max(0, $depth); // 음수 방지
         return str_repeat('../', $depth);
     }
     
@@ -33,7 +34,40 @@ class NavigationHelper {
         return $this->rootPath . 'index.php';
     }
     
+    public function getRootUrl() {
+        return $this->rootPath;
+    }
+    
     public function getModuleUrl($path) {
+        // 절대 경로인 경우
+        if (strpos($path, '/') === 0) {
+            return $path;
+        }
+        
+        // 이미 modules/로 시작하는 경우
+        if (strpos($path, 'modules/') === 0) {
+            return $this->rootPath . $path;
+        }
+        
+        // 이미 상대 경로로 시작하는 경우 (../modules/ 등)
+        if (strpos($path, '../') === 0) {
+            return $this->rootPath . $path;
+        }
+        
+        // 현재 경로에서 modules 디렉토리까지의 상대 경로 계산
+        $currentPath = $_SERVER['REQUEST_URI'] ?? '/';
+        $pathParts = explode('/', trim($currentPath, '/'));
+        
+        // modules 디렉토리 찾기
+        $modulesIndex = array_search('modules', $pathParts);
+        if ($modulesIndex !== false) {
+            // modules 디렉토리 이후의 경로만 사용
+            $relativeDepth = count($pathParts) - $modulesIndex - 1;
+            $relativePath = str_repeat('../', $relativeDepth);
+            return $relativePath . 'modules/' . $path;
+        }
+        
+        // modules 디렉토리를 찾을 수 없는 경우 기본 처리
         return $this->rootPath . 'modules/' . $path;
     }
     
@@ -102,13 +136,10 @@ if (!isset($page_title)) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo isset($pageTitle) ? htmlspecialchars($pageTitle) . ' - ' : ''; ?>My Playground</title>
-    <link href="/mp/resources/css/tailwind.output.css" rel="stylesheet">
+    <link rel="stylesheet" href="/resources/css/tailwind.output.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="/mp/favicon.ico">
-    <script>
-        // Development environment - CDN usage is acceptable
-        // tailwind.config = { ... } 전체 삭제
-    </script>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
     <style>
         :root {
             --background: 0 0% 100%;
@@ -218,10 +249,10 @@ if (!isset($page_title)) {
                             <span>Learning</span>
                         </button>
                         <div id="learning-dropdown" class="absolute top-full mt-2 w-48 bg-popover border rounded-lg shadow-lg hidden">
-                            <a href="<?php echo $nav->getModuleUrl('learning/card/slideshow.php'); ?>" class="block px-4 py-2 hover:bg-accent text-sm">Card Slideshow</a>
-                            <a href="<?php echo $nav->getModuleUrl('learning/card/wordcard_en.php'); ?>" class="block px-4 py-2 hover:bg-accent text-sm">Word Cards (EN)</a>
-                            <a href="<?php echo $nav->getModuleUrl('learning/card/wordcard_ko.php'); ?>" class="block px-4 py-2 hover:bg-accent text-sm">Word Cards (KR)</a>
-                            <a href="<?php echo $nav->getModuleUrl('learning/voca/voca.php'); ?>" class="block px-4 py-2 hover:bg-accent text-sm">Vocabulary</a>
+                            <a href="/modules/learning/card/slideshow.php" class="block px-4 py-2 hover:bg-accent text-sm">Card Slideshow</a>
+                            <a href="/modules/learning/card/wordcard_en.php" class="block px-4 py-2 hover:bg-accent text-sm">Word Cards (EN)</a>
+                            <a href="/modules/learning/card/wordcard_ko.php" class="block px-4 py-2 hover:bg-accent text-sm">Word Cards (KR)</a>
+                            <a href="/modules/learning/voca/voca.php" class="block px-4 py-2 hover:bg-accent text-sm">Vocabulary</a>
                         </div>
                     </div>
 
@@ -233,9 +264,9 @@ if (!isset($page_title)) {
                             <span>Tools</span>
                         </button>
                         <div id="tools-dropdown" class="absolute top-full mt-2 w-48 bg-popover border rounded-lg shadow-lg hidden">
-                                                            <a href="<?php echo $nav->getModuleUrl('tools/news/search_news_form.php'); ?>" class="block px-4 py-2 hover:bg-accent text-sm">News Search</a>
-                            <a href="<?php echo $nav->getModuleUrl('tools/tour/familytour.php'); ?>" class="block px-4 py-2 hover:bg-accent text-sm">Family Tour</a>
-                            <a href="<?php echo $nav->getModuleUrl('tools/box/boxbreathe.php'); ?>" class="block px-4 py-2 hover:bg-accent text-sm">Box Breathing</a>
+                            <a href="/modules/tools/news/search_news_form.php" class="block px-4 py-2 hover:bg-accent text-sm">News Search</a>
+                            <a href="/modules/tools/tour/familytour.php" class="block px-4 py-2 hover:bg-accent text-sm">Family Tour</a>
+                            <a href="/modules/tools/box/boxbreathe.php" class="block px-4 py-2 hover:bg-accent text-sm">Box Breathing</a>
                         </div>
                     </div>
 
@@ -249,8 +280,8 @@ if (!isset($page_title)) {
                             <span>Management</span>
                         </button>
                         <div id="management-dropdown" class="absolute top-full mt-2 w-48 bg-popover border rounded-lg shadow-lg hidden">
-                            <a href="<?php echo $nav->getModuleUrl('management/crud/data_list.php'); ?>" class="block px-4 py-2 hover:bg-accent text-sm">CRUD Demo</a>
-                            <a href="<?php echo $nav->getModuleUrl('management/myhealth/health_list.php'); ?>" class="block px-4 py-2 hover:bg-accent text-sm">My Health</a>
+                            <a href="/modules/management/crud/data_list.php" class="block px-4 py-2 hover:bg-accent text-sm">CRUD Demo</a>
+                            <a href="/modules/management/myhealth/health_list.php" class="block px-4 py-2 hover:bg-accent text-sm">My Health</a>
                         </div>
                     </div>
                 </div>
@@ -309,25 +340,25 @@ if (!isset($page_title)) {
                 <div>
                     <h3 class="font-medium text-sm text-muted-foreground mb-2">Learning</h3>
                     <div class="space-y-1 ml-4">
-                        <a href="<?php echo $nav->getModuleUrl('learning/card/slideshow.php'); ?>" class="block p-2 rounded hover:bg-accent text-sm">Card Slideshow</a>
-                        <a href="<?php echo $nav->getModuleUrl('learning/card/wordcard_en.php'); ?>" class="block p-2 rounded hover:bg-accent text-sm">Word Cards (EN)</a>
-                        <a href="<?php echo $nav->getModuleUrl('learning/card/wordcard_ko.php'); ?>" class="block p-2 rounded hover:bg-accent text-sm">Word Cards (KR)</a>
-                        <a href="<?php echo $nav->getModuleUrl('learning/voca/voca.php'); ?>" class="block p-2 rounded hover:bg-accent text-sm">Vocabulary</a>
+                        <a href="/modules/learning/card/slideshow.php" class="block p-2 rounded hover:bg-accent text-sm">Card Slideshow</a>
+                        <a href="/modules/learning/card/wordcard_en.php" class="block p-2 rounded hover:bg-accent text-sm">Word Cards (EN)</a>
+                        <a href="/modules/learning/card/wordcard_ko.php" class="block p-2 rounded hover:bg-accent text-sm">Word Cards (KR)</a>
+                        <a href="/modules/learning/voca/voca.php" class="block p-2 rounded hover:bg-accent text-sm">Vocabulary</a>
                     </div>
                 </div>
                 <div>
                     <h3 class="font-medium text-sm text-muted-foreground mb-2">Tools</h3>
                     <div class="space-y-1 ml-4">
-                        <a href="<?php echo $nav->getModuleUrl('tools/news/search_news_form.php'); ?>" class="block p-2 rounded hover:bg-accent text-sm">News Search</a>
-                        <a href="<?php echo $nav->getModuleUrl('tools/tour/familytour.php'); ?>" class="block p-2 rounded hover:bg-accent text-sm">Family Tour</a>
-                        <a href="<?php echo $nav->getModuleUrl('tools/box/boxbreathe.php'); ?>" class="block p-2 rounded hover:bg-accent text-sm">Box Breathing</a>
+                        <a href="/modules/tools/news/search_news_form.php" class="block p-2 rounded hover:bg-accent text-sm">News Search</a>
+                        <a href="/modules/tools/tour/familytour.php" class="block p-2 rounded hover:bg-accent text-sm">Family Tour</a>
+                        <a href="/modules/tools/box/boxbreathe.php" class="block p-2 rounded hover:bg-accent text-sm">Box Breathing</a>
                     </div>
                 </div>
                 <div>
                     <h3 class="font-medium text-sm text-muted-foreground mb-2">Management</h3>
                     <div class="space-y-1 ml-4">
-                        <a href="<?php echo $nav->getModuleUrl('management/crud/data_list.php'); ?>" class="block p-2 rounded hover:bg-accent text-sm">CRUD Demo</a>
-                        <a href="<?php echo $nav->getModuleUrl('management/myhealth/health_list.php'); ?>" class="block p-2 rounded hover:bg-accent text-sm">My Health</a>
+                        <a href="/modules/management/crud/data_list.php" class="block p-2 rounded hover:bg-accent text-sm">CRUD Demo</a>
+                        <a href="/modules/management/myhealth/health_list.php" class="block p-2 rounded hover:bg-accent text-sm">My Health</a>
                     </div>
                 </div>
             </nav>

@@ -416,18 +416,19 @@ async function deleteWord(id) {
     if (!confirm('Are you sure you want to delete this word?')) return;
     
     try {
-        const response = await fetch('delete_vocabulary.php', {
+        const response = await fetch(`delete_vocabulary.php?id=${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ id })
+            }
         });
         
-        if (response.ok) {
+        const result = await response.json();
+        
+        if (response.ok && result.success) {
             loadVocabulary();
         } else {
-            alert('Failed to delete word');
+            alert('Failed to delete word: ' + (result.error || 'Unknown error'));
         }
     } catch (error) {
         console.error('Error:', error);

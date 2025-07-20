@@ -1,0 +1,602 @@
+[
+  {
+    "id": 1,
+    "sentence": "Rain falls",
+    "category": "nature",
+    "difficulty": "easy"
+  },
+  {
+    "id": 2,
+    "sentence": "Snow melts",
+    "category": "nature",
+    "difficulty": "easy"
+  },
+  {
+    "id": 3,
+    "sentence": "Wind blows",
+    "category": "nature",
+    "difficulty": "easy"
+  },
+  {
+    "id": 4,
+    "sentence": "Sun shines",
+    "category": "nature",
+    "difficulty": "easy"
+  },
+  {
+    "id": 5,
+    "sentence": "Moon rises",
+    "category": "nature",
+    "difficulty": "easy"
+  },
+  {
+    "id": 6,
+    "sentence": "Stars twinkle",
+    "category": "nature",
+    "difficulty": "easy"
+  },
+  {
+    "id": 7,
+    "sentence": "Clouds drift",
+    "category": "nature",
+    "difficulty": "easy"
+  },
+  {
+    "id": 8,
+    "sentence": "Thunder roars",
+    "category": "nature",
+    "difficulty": "easy"
+  },
+  {
+    "id": 9,
+    "sentence": "Lightning strikes",
+    "category": "nature",
+    "difficulty": "easy"
+  },
+  {
+    "id": 10,
+    "sentence": "Waves crash",
+    "category": "nature",
+    "difficulty": "easy"
+  },
+  {
+    "id": 11,
+    "sentence": "Birds fly",
+    "category": "animals",
+    "difficulty": "easy"
+  },
+  {
+    "id": 12,
+    "sentence": "Fish swim",
+    "category": "animals",
+    "difficulty": "easy"
+  },
+  {
+    "id": 13,
+    "sentence": "Cats purr",
+    "category": "animals",
+    "difficulty": "easy"
+  },
+  {
+    "id": 14,
+    "sentence": "Dogs bark",
+    "category": "animals",
+    "difficulty": "easy"
+  },
+  {
+    "id": 15,
+    "sentence": "Horses gallop",
+    "category": "animals",
+    "difficulty": "easy"
+  },
+  {
+    "id": 16,
+    "sentence": "Rabbits hop",
+    "category": "animals",
+    "difficulty": "easy"
+  },
+  {
+    "id": 17,
+    "sentence": "Eagles soar",
+    "category": "animals",
+    "difficulty": "easy"
+  },
+  {
+    "id": 18,
+    "sentence": "Bees buzz",
+    "category": "animals",
+    "difficulty": "easy"
+  },
+  {
+    "id": 19,
+    "sentence": "Lions roar",
+    "category": "animals",
+    "difficulty": "easy"
+  },
+  {
+    "id": 20,
+    "sentence": "Elephants trumpet",
+    "category": "animals",
+    "difficulty": "easy"
+  },
+  {
+    "id": 21,
+    "sentence": "Doors open",
+    "category": "objects",
+    "difficulty": "easy"
+  },
+  {
+    "id": 22,
+    "sentence": "Lights flicker",
+    "category": "objects",
+    "difficulty": "easy"
+  },
+  {
+    "id": 23,
+    "sentence": "Phones ring",
+    "category": "objects",
+    "difficulty": "easy"
+  },
+  {
+    "id": 24,
+    "sentence": "Cars honk",
+    "category": "objects",
+    "difficulty": "easy"
+  },
+  {
+    "id": 25,
+    "sentence": "Trains whistle",
+    "category": "objects",
+    "difficulty": "easy"
+  },
+  {
+    "id": 26,
+    "sentence": "Clocks tick",
+    "category": "objects",
+    "difficulty": "easy"
+  },
+  {
+    "id": 27,
+    "sentence": "Bells chime",
+    "category": "objects",
+    "difficulty": "easy"
+  },
+  {
+    "id": 28,
+    "sentence": "Engines roar",
+    "category": "objects",
+    "difficulty": "easy"
+  },
+  {
+    "id": 29,
+    "sentence": "Sirens wail",
+    "category": "objects",
+    "difficulty": "easy"
+  },
+  {
+    "id": 30,
+    "sentence": "Horns blast",
+    "category": "objects",
+    "difficulty": "easy"
+  },
+  {
+    "id": 31,
+    "sentence": "Children laugh",
+    "category": "people",
+    "difficulty": "easy"
+  },
+  {
+    "id": 32,
+    "sentence": "People walk",
+    "category": "people",
+    "difficulty": "easy"
+  },
+  {
+    "id": 33,
+    "sentence": "Students study",
+    "category": "people",
+    "difficulty": "easy"
+  },
+  {
+    "id": 34,
+    "sentence": "Teachers explain",
+    "category": "people",
+    "difficulty": "easy"
+  },
+  {
+    "id": 35,
+    "sentence": "Doctors heal",
+    "category": "people",
+    "difficulty": "easy"
+  },
+  {
+    "id": 36,
+    "sentence": "Artists paint",
+    "category": "people",
+    "difficulty": "easy"
+  },
+  {
+    "id": 37,
+    "sentence": "Musicians play",
+    "category": "people",
+    "difficulty": "easy"
+  },
+  {
+    "id": 38,
+    "sentence": "Dancers leap",
+    "category": "people",
+    "difficulty": "easy"
+  },
+  {
+    "id": 39,
+    "sentence": "Writers type",
+    "category": "people",
+    "difficulty": "easy"
+  },
+  {
+    "id": 40,
+    "sentence": "Chefs cook",
+    "category": "people",
+    "difficulty": "easy"
+  },
+  {
+    "id": 41,
+    "sentence": "Ice melts",
+    "category": "nature",
+    "difficulty": "easy"
+  },
+  {
+    "id": 42,
+    "sentence": "Water boils",
+    "category": "nature",
+    "difficulty": "easy"
+  },
+  {
+    "id": 43,
+    "sentence": "Bread bakes",
+    "category": "food",
+    "difficulty": "easy"
+  },
+  {
+    "id": 44,
+    "sentence": "Glass breaks",
+    "category": "objects",
+    "difficulty": "easy"
+  },
+  {
+    "id": 45,
+    "sentence": "Paper tears",
+    "category": "objects",
+    "difficulty": "easy"
+  },
+  {
+    "id": 46,
+    "sentence": "Candles burn",
+    "category": "objects",
+    "difficulty": "easy"
+  },
+  {
+    "id": 47,
+    "sentence": "Flowers bloom",
+    "category": "nature",
+    "difficulty": "easy"
+  },
+  {
+    "id": 48,
+    "sentence": "Leaves fall",
+    "category": "nature",
+    "difficulty": "easy"
+  },
+  {
+    "id": 49,
+    "sentence": "Trees grow",
+    "category": "nature",
+    "difficulty": "easy"
+  },
+  {
+    "id": 50,
+    "sentence": "Grass grows",
+    "category": "nature",
+    "difficulty": "easy"
+  },
+  {
+    "id": 51,
+    "sentence": "Hearts beat",
+    "category": "body",
+    "difficulty": "easy"
+  },
+  {
+    "id": 52,
+    "sentence": "Eyes blink",
+    "category": "body",
+    "difficulty": "easy"
+  },
+  {
+    "id": 53,
+    "sentence": "Hands shake",
+    "category": "body",
+    "difficulty": "easy"
+  },
+  {
+    "id": 54,
+    "sentence": "Feet hurt",
+    "category": "body",
+    "difficulty": "easy"
+  },
+  {
+    "id": 55,
+    "sentence": "Heads ache",
+    "category": "body",
+    "difficulty": "easy"
+  },
+  {
+    "id": 56,
+    "sentence": "Stomachs growl",
+    "category": "body",
+    "difficulty": "easy"
+  },
+  {
+    "id": 57,
+    "sentence": "Teeth chatter",
+    "category": "body",
+    "difficulty": "easy"
+  },
+  {
+    "id": 58,
+    "sentence": "Muscles ache",
+    "category": "body",
+    "difficulty": "easy"
+  },
+  {
+    "id": 59,
+    "sentence": "Wounds heal",
+    "category": "body",
+    "difficulty": "easy"
+  },
+  {
+    "id": 60,
+    "sentence": "Bones break",
+    "category": "body",
+    "difficulty": "easy"
+  },
+  {
+    "id": 61,
+    "sentence": "Coffee brews",
+    "category": "food",
+    "difficulty": "easy"
+  },
+  {
+    "id": 62,
+    "sentence": "Soup simmers",
+    "category": "food",
+    "difficulty": "easy"
+  },
+  {
+    "id": 63,
+    "sentence": "Meat sizzles",
+    "category": "food",
+    "difficulty": "easy"
+  },
+  {
+    "id": 64,
+    "sentence": "Vegetables steam",
+    "category": "food",
+    "difficulty": "easy"
+  },
+  {
+    "id": 65,
+    "sentence": "Fruits ripen",
+    "category": "food",
+    "difficulty": "easy"
+  },
+  {
+    "id": 66,
+    "sentence": "Bread rises",
+    "category": "food",
+    "difficulty": "easy"
+  },
+  {
+    "id": 67,
+    "sentence": "Milk spills",
+    "category": "food",
+    "difficulty": "easy"
+  },
+  {
+    "id": 68,
+    "sentence": "Sugar dissolves",
+    "category": "food",
+    "difficulty": "easy"
+  },
+  {
+    "id": 69,
+    "sentence": "Salt sprinkles",
+    "category": "food",
+    "difficulty": "easy"
+  },
+  {
+    "id": 70,
+    "sentence": "Butter melts",
+    "category": "food",
+    "difficulty": "easy"
+  },
+  {
+    "id": 71,
+    "sentence": "Computers crash",
+    "category": "technology",
+    "difficulty": "easy"
+  },
+  {
+    "id": 72,
+    "sentence": "Phones vibrate",
+    "category": "technology",
+    "difficulty": "easy"
+  },
+  {
+    "id": 73,
+    "sentence": "Screens glow",
+    "category": "technology",
+    "difficulty": "easy"
+  },
+  {
+    "id": 74,
+    "sentence": "Keyboards click",
+    "category": "technology",
+    "difficulty": "easy"
+  },
+  {
+    "id": 75,
+    "sentence": "Printers buzz",
+    "category": "technology",
+    "difficulty": "easy"
+  },
+  {
+    "id": 76,
+    "sentence": "Speakers blast",
+    "category": "technology",
+    "difficulty": "easy"
+  },
+  {
+    "id": 77,
+    "sentence": "Cameras flash",
+    "category": "technology",
+    "difficulty": "easy"
+  },
+  {
+    "id": 78,
+    "sentence": "Alarms beep",
+    "category": "technology",
+    "difficulty": "easy"
+  },
+  {
+    "id": 79,
+    "sentence": "Microwaves ping",
+    "category": "technology",
+    "difficulty": "easy"
+  },
+  {
+    "id": 80,
+    "sentence": "Televisions flicker",
+    "category": "technology",
+    "difficulty": "easy"
+  },
+  {
+    "id": 81,
+    "sentence": "Happiness spreads",
+    "category": "emotions",
+    "difficulty": "easy"
+  },
+  {
+    "id": 82,
+    "sentence": "Sadness overwhelms",
+    "category": "emotions",
+    "difficulty": "easy"
+  },
+  {
+    "id": 83,
+    "sentence": "Anger boils",
+    "category": "emotions",
+    "difficulty": "easy"
+  },
+  {
+    "id": 84,
+    "sentence": "Fear grips",
+    "category": "emotions",
+    "difficulty": "easy"
+  },
+  {
+    "id": 85,
+    "sentence": "Love grows",
+    "category": "emotions",
+    "difficulty": "easy"
+  },
+  {
+    "id": 86,
+    "sentence": "Hope rises",
+    "category": "emotions",
+    "difficulty": "easy"
+  },
+  {
+    "id": 87,
+    "sentence": "Worry consumes",
+    "category": "emotions",
+    "difficulty": "easy"
+  },
+  {
+    "id": 88,
+    "sentence": "Joy bubbles",
+    "category": "emotions",
+    "difficulty": "easy"
+  },
+  {
+    "id": 89,
+    "sentence": "Peace settles",
+    "category": "emotions",
+    "difficulty": "easy"
+  },
+  {
+    "id": 90,
+    "sentence": "Excitement builds",
+    "category": "emotions",
+    "difficulty": "easy"
+  },
+  {
+    "id": 91,
+    "sentence": "Morning breaks",
+    "category": "time",
+    "difficulty": "easy"
+  },
+  {
+    "id": 92,
+    "sentence": "Evening falls",
+    "category": "time",
+    "difficulty": "easy"
+  },
+  {
+    "id": 93,
+    "sentence": "Night deepens",
+    "category": "time",
+    "difficulty": "easy"
+  },
+  {
+    "id": 94,
+    "sentence": "Spring arrives",
+    "category": "seasons",
+    "difficulty": "easy"
+  },
+  {
+    "id": 95,
+    "sentence": "Summer blazes",
+    "category": "seasons",
+    "difficulty": "easy"
+  },
+  {
+    "id": 96,
+    "sentence": "Autumn fades",
+    "category": "seasons",
+    "difficulty": "easy"
+  },
+  {
+    "id": 97,
+    "sentence": "Winter freezes",
+    "category": "seasons",
+    "difficulty": "easy"
+  },
+  {
+    "id": 98,
+    "sentence": "Time flies",
+    "category": "time",
+    "difficulty": "easy"
+  },
+  {
+    "id": 99,
+    "sentence": "Minutes pass",
+    "category": "time",
+    "difficulty": "easy"
+  },
+  {
+    "id": 100,
+    "sentence": "Hours drag",
+    "category": "time",
+    "difficulty": "easy"
+  }
+] 

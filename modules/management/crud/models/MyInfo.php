@@ -1,5 +1,4 @@
 <?php
-require "../../../system/includes/Model.php";
 
 class MyInfo extends Model {
     protected $table = 'myinfo';

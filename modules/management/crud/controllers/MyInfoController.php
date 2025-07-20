@@ -135,6 +135,43 @@ class MyInfoController {
         return $this->model->getById($id);
     }
 
+    public function update($id, $data) {
+        // Validate required fields
+        $errors = [];
+        if (empty($data['name'])) {
+            $errors[] = 'Name is required';
+        }
+        if (empty($data['email'])) {
+            $errors[] = 'Email is required';
+        }
+        if (empty($data['phone'])) {
+            $errors[] = 'Phone is required';
+        }
+
+        if (!empty($errors)) {
+            return [
+                'success' => false,
+                'errors' => $errors,
+                'data' => $data
+            ];
+        }
+
+        $result = $this->model->update($id, $data);
+
+        if ($result['success']) {
+            return [
+                'success' => true,
+                'message' => 'Record updated successfully'
+            ];
+        } else {
+            return [
+                'success' => false,
+                'message' => $result['message'] ?? 'Failed to update record',
+                'data' => $data
+            ];
+        }
+    }
+
     public function search($query) {
         $searchFields = ['name', 'email', 'phone'];
         return $this->model->search($query, $searchFields);

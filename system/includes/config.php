@@ -10,10 +10,13 @@ require_once __DIR__ . '/../../config/credentials/loader.php';
 
 // Environment Detection
 $serverName = $_SERVER['SERVER_NAME'] ?? '';
+$serverPort = $_SERVER['SERVER_PORT'] ?? '';
 $isLocal = (
     $serverName === 'localhost' ||
     $serverName === '127.0.0.1' ||
-    strpos($serverName, 'localhost') !== false
+    strpos($serverName, 'localhost') !== false ||
+    $serverPort === '8080' ||
+    php_sapi_name() === 'cli'
 );
 
 // Database Configuration from credentials

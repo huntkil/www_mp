@@ -295,9 +295,9 @@ class MobileOptimizer
             <nav class="mobile-nav-menu">
                 <ul>
                     <li><a href="/">홈</a></li>
-                    <li><a href="/modules/learning/">학습</a></li>
-                    <li><a href="/modules/tools/">도구</a></li>
-                    <li><a href="/modules/management/">관리</a></li>
+                    <li><a href="/modules/learning/index.php">학습</a></li>
+                    <li><a href="/modules/tools/index.php">도구</a></li>
+                    <li><a href="/modules/management/index.php">관리</a></li>
                 </ul>
             </nav>
         </div>
