@@ -6,34 +6,47 @@ $page_title = "Data List";
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+echo "<!-- Debug: Starting data_list.php -->";
+
 // Load production config if exists, otherwise development
 $config_prod = __DIR__ . '/../../../system/includes/config_production.php';
 $config_dev = __DIR__ . '/../../../system/includes/config.php';
 
 if (file_exists($config_prod)) {
     require_once $config_prod;
+    echo "<!-- Debug: Production config loaded -->";
 } else {
     require_once $config_dev;
+    echo "<!-- Debug: Development config loaded -->";
 }
 
+echo "<!-- Debug: About to include header -->";
 require "../../../system/includes/header.php";
-require_once 'controllers/MyInfoController.php';
+echo "<!-- Debug: Header included -->";
 
-// Use controller with error handling
+echo "<!-- Debug: About to load data -->";
+
+// Simple direct data loading
 try {
-    $controller = new MyInfoController();
-    $result = $controller->index();
+    $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET;
+    $pdo = new PDO($dsn, DB_USER, DB_PASS, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES => false
+    ]);
     
-    if ($result && $result['success']) {
-        $items = $result['data'];
-        $current_page = $result['current_page'];
-        $total_pages = $result['total_pages'];
-    } else {
-        $items = [];
-        $current_page = 1;
-        $total_pages = 1;
-    }
+    $sql = "SELECT * FROM myinfo ORDER BY no DESC LIMIT 10";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+    $items = $stmt->fetchAll();
+    
+    $current_page = 1;
+    $total_pages = 1;
+    
+    echo "<!-- Debug: Data loaded successfully, " . count($items) . " records -->";
+    
 } catch (Exception $e) {
+    echo "<!-- Debug: Error loading data: " . $e->getMessage() . " -->";
     echo "Error: " . $e->getMessage();
     $items = [];
     $current_page = 1;
