@@ -30,10 +30,19 @@ $data = [];
 // Handle POST request before any output
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo "<!-- Debug: Processing POST request -->";
+    echo "<div style='background: yellow; padding: 10px; margin: 10px;'>";
+    echo "<h3>Processing Form Submission...</h3>";
     
     // Simple data sanitization
     $data = array_map('trim', $_POST);
     $data = array_map('htmlspecialchars', $data);
+    
+    echo "<p>Received data:</p>";
+    echo "<ul>";
+    foreach ($data as $key => $value) {
+        echo "<li><strong>$key:</strong> $value</li>";
+    }
+    echo "</ul>";
     
     // Validate required fields
     $errors = [];
@@ -48,6 +57,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     
     if (empty($errors)) {
+        echo "<p>✅ Validation passed. Attempting to save to database...</p>";
+        
         try {
             // Direct database insertion
             $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET;
@@ -56,6 +67,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                 PDO::ATTR_EMULATE_PREPARES => false
             ]);
+            
+            echo "<p>✅ Database connection successful</p>";
             
             $sql = "INSERT INTO myinfo (name, email, phone, age, birthday, height, weight) VALUES (?, ?, ?, ?, ?, ?, ?)";
             $stmt = $pdo->prepare($sql);
@@ -69,17 +82,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $data['weight'] ?: null
             ]);
             
+            echo "<p>✅ Record inserted successfully!</p>";
             echo "<!-- Debug: Record created successfully -->";
             $_SESSION['flash_message'] = 'Record created successfully';
             $_SESSION['flash_type'] = 'success';
-            header('Location: data_list.php');
+            
+            // Use JavaScript redirect instead of PHP header
+            echo "<script>window.location.href = 'data_list.php';</script>";
+            echo "<p>Record created successfully! Redirecting...</p>";
+            echo "</div>";
             exit;
             
         } catch (Exception $e) {
+            echo "<p>❌ Database error: " . $e->getMessage() . "</p>";
             echo "<!-- Debug: Error creating record: " . $e->getMessage() . " -->";
             $errors[] = 'Failed to create record: ' . $e->getMessage();
         }
+    } else {
+        echo "<p>❌ Validation errors:</p>";
+        echo "<ul>";
+        foreach ($errors as $error) {
+            echo "<li>$error</li>";
+        }
+        echo "</ul>";
     }
+    echo "</div>";
 }
 ?>
 
